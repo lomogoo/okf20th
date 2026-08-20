@@ -32,7 +32,7 @@ img{display:block;max-width:100%}
 .hero{height:380svh;position:relative}
 .hero__sticky{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
 .hero__sticky::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,#fff 0%,var(--cream) 68%,#eaf0d4 100%)}
-.stage{position:relative;height:min(92svh,132vw);aspect-ratio:1734/2448}
+.stage{position:relative;height:min(92svh,132vw);aspect-ratio:1734/2448;transform-origin:50% 50%;will-change:transform}
 .piece{position:absolute;will-change:transform,opacity;transform-origin:50% 50%}
 .piece.full{left:0;top:0;width:100%}
 
@@ -99,10 +99,10 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 <section class="hero" id="hero">
   <div class="hero__sticky">
     <div class="stage" id="stage">
-      <img class="piece full" data-role="mug"    src="assets/pattern.webp" alt="">
-      <img class="piece" data-role="mug"    style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
+      <img class="piece full" data-role="mug"    data-shake="mug" src="assets/pattern.webp" alt="">
+      <img class="piece" data-role="mug"    data-shake="mug" style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
       <img class="piece" data-role="title"  style="left:17.128%;top:60.784%;width:70.588%" src="assets/title.webp" alt="SENDAI OKTOBERFEST 20TH">
-      <img class="piece" data-role="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
+      <img class="piece" data-role="people" data-shake="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
       <img class="piece" data-role="final"  style="left:19.550%;top:21.732%;width:67.243%" src="assets/date.webp" alt="2026年9月11日金曜から9月27日日曜">
       <img class="piece" data-role="final"  style="left:3.518%;top:34.518%;width:65.110%" src="assets/extras.webp" alt="">
       <img class="piece" data-role="final"  style="left:3.172%;top:2.165%;width:65.167%" src="assets/deco.webp" alt="">
@@ -186,9 +186,10 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 <script>
 (function(){
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hero = document.getElementById('hero'),
-      hint = document.getElementById('hint'),
-      beat = document.getElementById('beat');
+  var hero  = document.getElementById('hero'),
+      stage = document.getElementById('stage'),
+      hint  = document.getElementById('hint'),
+      beat  = document.getElementById('beat');
   var pieces = [].slice.call(document.querySelectorAll('.piece'));
   var AR = 1734/2448;                       // stage width / height
   var TITLE_SC = innerWidth < 720 ? 1.22 : 2.05;   // narrow screens can't hold the big title
@@ -200,7 +201,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var role = p.dataset.role, cx = parseFloat(p.style.left||0)+3, s;
     if(role==='title')       s={from:0.00,to:0.24,sc:TITLE_SC,center:true,fade:false};
     else if(role==='mug')    s={from:0.15,to:0.44,sc:1.06,dx:0,dy:14};
-    else if(role==='people') s={from:0.40,to:0.68,sc:0.97,dx:0,dy:13};
+    else if(role==='people') s={from:0.40,to:0.68,sc:0.90,dx:0,dy:13};
     else if(role==='final')  s={from:0.62,to:0.80,sc:1,dx:0,dy:4};
     else if(role==='motif'){
       var k=motifs.indexOf(p), dir=cx<50?-1:1;
@@ -230,6 +231,38 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   function ease(t){ return 1-Math.pow(1-t,3); }
   function clamp(v,a,b){ return v<a?a:v>b?b:v; }
 
+  /* ---------- camera ----------
+     The whole stage is scaled and panned, so the people illustration reads as a
+     camera pushing in on them rather than one image growing by itself. The lens
+     pulls back out again while the rest of the poster assembles.               */
+  var subject = pieces.filter(function(p){return p.dataset.role==='people';})[0];
+  var CAM_ZOOM = innerWidth < 720 ? 1.30 : 1.46;
+
+  // centre of the people illustration, in % of the stage box
+  function focus(){
+    if(!subject || !subject.naturalWidth) return null;
+    if(subject._f) return subject._f;
+    var L=parseFloat(subject.style.left)||0, T=parseFloat(subject.style.top)||0, W=parseFloat(subject.style.width)||100;
+    var H = W * (subject.naturalHeight/subject.naturalWidth) * AR;
+    subject._f = { x:L+W/2, y:T+H/2 };
+    return subject._f;
+  }
+
+  // 0 = wide shot, 1 = pushed all the way in on the subject
+  function camWeight(v){
+    if(v < 0.26) return 0;
+    if(v < 0.55) return ease((v-0.26)/0.29);   // push in
+    if(v < 0.63) return 1;                      // hold on the toast
+    if(v < 0.82) return 1-ease((v-0.63)/0.19);  // pull back for the full poster
+    return 0;
+  }
+
+  /* ---------- vibration ----------
+     Once the poster is complete, each scroll gives the mug and the people a
+     short damped shudder so the finished frame still feels alive.             */
+  var shake = 0, lastNow = 0;
+  function kick(){ if(!reduce && P >= 0.95) shake = Math.min(1, shake + 0.7); }
+
   var P=0;
   var BEATS=[[0.00,'THE 20TH'],[0.18,'A BEER FOR 20 YEARS'],[0.44,'AND EVERYONE WHO CAME'],[0.72,'']];
   var lastBeat='';
@@ -238,19 +271,38 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var r=hero.getBoundingClientRect();
     P = reduce ? 1 : clamp(-r.top/(hero.offsetHeight-innerHeight),0,1);
     var t=now/1000;
+    var dt = lastNow ? Math.min(0.05,(now-lastNow)/1000) : 0;
+    lastNow = now;
+    shake *= Math.exp(-dt*4.2);
+
+    var f = focus(), cw = reduce ? 0 : camWeight(P);
+    if(f && cw > 0.001){
+      var k = 1 + (CAM_ZOOM-1)*cw;
+      var px = (50-f.x)*cw + Math.sin(t*0.40)*0.6*cw;   // a touch of handheld drift
+      var py = (50-f.y)*cw + Math.cos(t*0.31)*0.45*cw;
+      stage.style.transform = 'scale('+k+') translate('+px+'%,'+py+'%)';
+    } else if(stage.style.transform){
+      stage.style.transform = '';
+    }
 
     for(var i=0;i<pieces.length;i++){
       var p=pieces[i], s=p._s;
       var lp=ease(clamp((P-s.from)/(s.to-s.from),0,1)), inv=1-lp;
       var dx=s.dx, dy=s.dy;
       if(s.center){ var c=centre(p); if(c){ dx=c.tx; dy=c.ty; } }
-      var amb=0, ambR=0;
+      var amb=0, ambR=0, ambX=0;
       if(!reduce && lp>0.98){
         if(p.dataset.role==='motif'){ amb=Math.sin(t*0.8+i)*0.9; ambR=Math.sin(t*0.5+i)*2.5; }
         if(p.dataset.role==='dia'){ amb=Math.sin(t*0.6+i*1.7)*1.2; ambR=Math.sin(t*0.4+i)*4; }
       }
+      if(shake>0.002 && p.dataset.shake){
+        var ph = p.dataset.shake==='mug' ? 0 : 2.1;
+        ambX += Math.sin(t*38+ph*1.4)*1.10*shake;
+        amb  += Math.sin(t*44+ph)*1.25*shake;
+        ambR += Math.sin(t*41+ph*0.7)*1.40*shake;
+      }
       p.style.opacity = (s.fade===false) ? 1 : clamp(lp*1.3,0,1);
-      p.style.transform = 'translate('+(dx*inv)+'%,'+(dy*inv+amb)+'%) rotate('+(s.rot*inv+ambR)+'deg) scale('+(s.sc+(1-s.sc)*lp)+')';
+      p.style.transform = 'translate('+(dx*inv+ambX)+'%,'+(dy*inv+amb)+'%) rotate('+(s.rot*inv+ambR)+'deg) scale('+(s.sc+(1-s.sc)*lp)+')';
     }
 
     var label='';
@@ -261,6 +313,97 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  /* ---------- one gesture, one beat ----------
+     Inside the hero the page does not free-scroll: however hard the wheel is
+     spun or the screen is flicked, the view glides to the next stop and stops
+     there. Input stays locked until the glide has finished AND the inertia
+     tail has gone quiet, so a single hard flick cannot skip a beat.           */
+  var STOPS=[0, 0.24, 0.44, 0.68, 0.80, 0.92, 1];
+  var idx=0, animating=false, locked=false, unlockTimer=null;
+
+  function range(){ return Math.max(1, hero.offsetHeight - innerHeight); }
+  function yFor(i){ return Math.round(STOPS[clamp(i,0,STOPS.length-1)]*range()); }
+  function nearest(){
+    var y=pageYOffset, best=0, bd=Infinity;
+    for(var i=0;i<STOPS.length;i++){ var d=Math.abs(yFor(i)-y); if(d<bd){ bd=d; best=i; } }
+    return best;
+  }
+  function atEnd(){ return pageYOffset >= range()-1; }
+  function inHero(){ return pageYOffset <= range()+1; }
+
+  function glide(toY, done){
+    var fromY=pageYOffset, d=toY-fromY, start=null;
+    if(Math.abs(d) < 1){ animating=false; if(done) done(); return; }
+    animating=true;
+    requestAnimationFrame(function step(ts){
+      if(start===null) start=ts;
+      var k=clamp((ts-start)/760,0,1);
+      var e = k<0.5 ? 4*k*k*k : 1-Math.pow(-2*k+2,3)/2;   // easeInOutCubic
+      scrollTo(0, fromY+d*e);
+      if(k<1) requestAnimationFrame(step);
+      else { animating=false; if(done) done(); }
+    });
+  }
+  function go(i){
+    idx=clamp(i,0,STOPS.length-1);
+    var last = idx===STOPS.length-1;
+    glide(yFor(idx), last ? kick : null);   // the finished poster gets a shudder
+  }
+
+  // release the lock only once the gesture's inertia has died down
+  function armUnlock(){
+    clearTimeout(unlockTimer);
+    unlockTimer=setTimeout(function(){
+      if(animating) armUnlock(); else locked=false;
+    }, 140);
+  }
+
+  // true when this input should be handed back to the browser
+  function passThrough(dir){ return dir > 0 && atEnd(); }
+
+  function advance(dir){
+    if(locked) return;
+    locked=true; armUnlock();
+    go((animating ? idx : nearest()) + dir);
+  }
+
+  if(!reduce){
+    addEventListener('wheel', function(e){
+      if(!inHero() || e.ctrlKey) return;
+      var dir = e.deltaY>0 ? 1 : -1;
+      if(!e.deltaY) return;
+      kick();
+      if(passThrough(dir)) return;      // poster is done — let the page scroll on
+      e.preventDefault();
+      if(locked){ armUnlock(); return; }  // inertia tail of the same flick
+      advance(dir);
+    }, {passive:false});
+
+    var touchY=null;
+    addEventListener('touchstart', function(e){ touchY=e.touches[0].clientY; }, {passive:true});
+    addEventListener('touchmove', function(e){
+      if(!inHero() || touchY===null) return;
+      var dy = touchY - e.touches[0].clientY, dir = dy>0 ? 1 : -1;
+      if(passThrough(dir)){ touchY=null; return; }
+      e.preventDefault();                 // no free dragging inside the hero
+      if(Math.abs(dy) < 28) return;       // below the swipe threshold
+      touchY=null; kick(); advance(dir);
+    }, {passive:false});
+    addEventListener('touchend', function(){ touchY=null; }, {passive:true});
+
+    addEventListener('keydown', function(e){
+      if(!inHero()) return;
+      var k=e.key, dir=0;
+      if(k==='ArrowDown'||k==='PageDown'||k===' '||k==='Spacebar') dir=1;
+      else if(k==='ArrowUp'||k==='PageUp') dir=-1;
+      else if(k==='Home'){ e.preventDefault(); locked=false; go(0); return; }
+      else return;
+      if(passThrough(dir)) return;
+      e.preventDefault();
+      kick(); advance(dir);
+    });
+  }
 
   var items=['GERMAN BEER','TOHOKU BEER','WINE','SAKE','BEEF','SAUSAGE','FRIT','OYSTERS','COFFEE','BREZEL','SWEETS','AND MUSIC'];
   function fill(el,list){ el.innerHTML = list.concat(list).map(function(x){return '<span>'+x+'</span>';}).join(''); }
