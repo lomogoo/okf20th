@@ -29,12 +29,16 @@ img{display:block;max-width:100%}
 :focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
 
 /* ---------- HERO ---------- */
-.hero{height:380svh;position:relative}
+.hero{height:560svh;position:relative}
 .hero__sticky{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
 .hero__sticky::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,#fff 0%,var(--cream) 68%,#eaf0d4 100%)}
 .stage{position:relative;height:min(92svh,132vw);aspect-ratio:1734/2448;transform-origin:50% 50%;will-change:transform}
 .piece{position:absolute;will-change:transform,opacity;transform-origin:50% 50%}
 .piece.full{left:0;top:0;width:100%}
+
+.petals{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.petals b{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity;font-family:var(--display);line-height:1}
+.petals b img{width:100%;height:auto;display:block}
 
 .beat{
   position:absolute;left:50%;translate:-50% 0;bottom:12svh;text-align:center;
@@ -130,6 +134,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       <img class="piece" data-role="info"   style="left:3.287%;top:84.150%;width:94.752%" src="assets/infotext.webp" alt="">
       <img class="piece" data-role="sponsor" style="left:3.460%;top:91.258%;width:92.676%" src="assets/sponsors.webp" alt="">
     </div>
+    <div class="petals" id="petals" aria-hidden="true"></div>
     <p class="beat" id="beat"></p>
     <div class="hint" id="hint"><i></i>SCROLL</div>
   </div>
@@ -186,10 +191,11 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 <script>
 (function(){
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hero  = document.getElementById('hero'),
-      stage = document.getElementById('stage'),
-      hint  = document.getElementById('hint'),
-      beat  = document.getElementById('beat');
+  var hero   = document.getElementById('hero'),
+      stage  = document.getElementById('stage'),
+      hint   = document.getElementById('hint'),
+      beat   = document.getElementById('beat'),
+      petals = document.getElementById('petals');
   var pieces = [].slice.call(document.querySelectorAll('.piece'));
   var AR = 1734/2448;                       // stage width / height
   var TITLE_SC = innerWidth < 720 ? 1.22 : 2.05;   // narrow screens can't hold the big title
@@ -199,22 +205,22 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
   pieces.forEach(function(p){
     var role = p.dataset.role, cx = parseFloat(p.style.left||0)+3, s;
-    if(role==='title')       s={from:0.00,to:0.24,sc:TITLE_SC,center:true,fade:false};
-    else if(role==='mug')    s={from:0.15,to:0.44,sc:1.06,dx:0,dy:14};
-    else if(role==='people') s={from:0.40,to:0.68,sc:0.90,dx:0,dy:13};
-    else if(role==='final')  s={from:0.62,to:0.80,sc:1,dx:0,dy:4};
+    if(role==='title')       s={from:0.00,to:0.13,sc:TITLE_SC,center:true,fade:false};
+    else if(role==='mug')    s={from:0.13,to:0.27,sc:1.06,dx:0,dy:14};
+    else if(role==='people') s={from:0.25,to:0.37,sc:0.94,dx:0,dy:10};
+    else if(role==='final')  s={from:0.75,to:0.84,sc:1,dx:0,dy:4};
     else if(role==='motif'){
       var k=motifs.indexOf(p), dir=cx<50?-1:1;
-      s={from:0.66+k*0.013,to:0.88+k*0.013,sc:0.55,dx:dir*38,dy:(k%2?18:-22),rot:dir*150};
+      s={from:0.78+k*0.008,to:0.90+k*0.008,sc:0.55,dx:dir*38,dy:(k%2?18:-22),rot:dir*150};
     }
     else if(role==='dia'){
       var j=dias.indexOf(p);
-      s={from:0.68+j*0.010,to:0.91+j*0.010,sc:0.7,dx:(j%3-1)*8,dy:-46-(j%4)*10,rot:(j%2?1:-1)*180};
+      s={from:0.79+j*0.007,to:0.91+j*0.007,sc:0.7,dx:(j%3-1)*8,dy:-46-(j%4)*10,rot:(j%2?1:-1)*180};
     }
-    else if(role==='emblem')  s={from:0.72,to:0.89,sc:0.2,dx:0,dy:0,rot:-200};
-    else if(role==='copy')    s={from:0.77,to:0.92,sc:1,dx:9,dy:0};
-    else if(role==='info')    s={from:0.83,to:0.96,sc:1,dx:0,dy:5};
-    else if(role==='sponsor') s={from:0.88,to:1.00,sc:1,dx:0,dy:4};
+    else if(role==='emblem')  s={from:0.82,to:0.91,sc:0.2,dx:0,dy:0,rot:-200};
+    else if(role==='copy')    s={from:0.85,to:0.93,sc:1,dx:9,dy:0};
+    else if(role==='info')    s={from:0.88,to:0.96,sc:1,dx:0,dy:5};
+    else if(role==='sponsor') s={from:0.91,to:1.00,sc:1,dx:0,dy:4};
     s.dx=s.dx||0; s.dy=s.dy||0; s.rot=s.rot||0;
     p._s=s;
   });
@@ -229,42 +235,126 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   }
 
   function ease(t){ return 1-Math.pow(1-t,3); }
+  function smooth(t){ return t*t*(3-2*t); }
   function clamp(v,a,b){ return v<a?a:v>b?b:v; }
+  function lerp(a,b,u){ return a+(b-a)*u; }
 
   /* ---------- camera ----------
-     The whole stage is scaled and panned, so the people illustration reads as a
-     camera pushing in on them rather than one image growing by itself. The lens
-     pulls back out again while the rest of the poster assembles.               */
+     Three close-ups on the toast, cut left → right → centre, then a pull back
+     to the whole poster. The stage is scaled and panned as one unit, so it
+     reads as a lens moving rather than images resizing.
+
+     Each cut is a box in people.webp's own pixel grid (1060 x 1269):
+     [centre x, centre y, width, height]                                      */
+  var CUTS = [
+    [280, 330, 380, 250],   // left  — the two players with their horns
+    [910, 232, 270, 215],   // right — the woman toasting and the trumpeter
+    [622, 370, 335, 190]    // centre— the group raising their glasses
+  ];
   var subject = pieces.filter(function(p){return p.dataset.role==='people';})[0];
-  var CAM_ZOOM = innerWidth < 720 ? 1.30 : 1.46;
+  var track = null, trackW = 0;
 
-  // centre of the people illustration, in % of the stage box
-  function focus(){
-    if(!subject || !subject.naturalWidth) return null;
-    if(subject._f) return subject._f;
+  // where the people illustration sits on the stage, in % of the stage box
+  function geom(){
     var L=parseFloat(subject.style.left)||0, T=parseFloat(subject.style.top)||0, W=parseFloat(subject.style.width)||100;
-    var H = W * (subject.naturalHeight/subject.naturalWidth) * AR;
-    subject._f = { x:L+W/2, y:T+H/2 };
-    return subject._f;
+    return { L:L, T:T, W:W, H:W*(subject.naturalHeight/subject.naturalWidth)*AR };
+  }
+  // frame one cut: centre it and zoom until the box fills the viewport
+  function shot(cut){
+    var g=geom(), nw=subject.naturalWidth, nh=subject.naturalHeight;
+    var cw = cut[2]/nw*g.W, ch = cut[3]/nh*g.H;                  // cut size, in stage %
+    var fw = innerWidth/(stage.offsetWidth*cw/100),              // zoom that fills the width
+        fh = innerHeight/(stage.offsetHeight*ch/100);            // ...and the height
+    var contain = Math.min(fw,fh), cover = Math.max(fw,fh);
+    // on a tall phone a width-fit leaves the faces small, so lean towards the
+    // tighter framing — but never far enough to push a subject out of frame
+    var z = contain * Math.min(1.35, Math.sqrt(cover/contain));
+    return { x:g.L+cut[0]/nw*g.W, y:g.T+cut[1]/nh*g.H, z:Math.min(z,9) };
+  }
+  // a swing between two cuts eases out a little, the way a real pan would
+  function swing(a,b,p){
+    return { p:p, x:(a.x+b.x)/2, y:(a.y+b.y)/2, z:Math.min(a.z,b.z)*0.62 };
+  }
+  function buildTrack(){
+    if(!subject || !subject.naturalWidth) return null;
+    var wide = {x:50, y:50, z:1};
+    var c0=shot(CUTS[0]), c1=shot(CUTS[1]), c2=shot(CUTS[2]);
+    var k = [
+      {p:0.00, x:wide.x, y:wide.y, z:wide.z},
+      {p:0.37, x:wide.x, y:wide.y, z:wide.z},
+      {p:0.455, x:c0.x, y:c0.y, z:c0.z},          // cut 1
+      {p:0.500, x:c0.x, y:c0.y, z:c0.z},
+      swing(c0,c1,0.5275),
+      {p:0.555, x:c1.x, y:c1.y, z:c1.z},          // cut 2
+      {p:0.600, x:c1.x, y:c1.y, z:c1.z},
+      swing(c1,c2,0.6275),
+      {p:0.655, x:c2.x, y:c2.y, z:c2.z},          // cut 3
+      {p:0.700, x:c2.x, y:c2.y, z:c2.z},
+      {p:0.780, x:wide.x, y:wide.y, z:wide.z},    // back to the full poster
+      {p:1.00, x:wide.x, y:wide.y, z:wide.z}
+    ];
+    trackW = innerWidth;
+    return k;
+  }
+  function camAt(v){
+    if(!track) track = buildTrack();
+    if(!track) return null;
+    for(var i=track.length-1;i>=0;i--){
+      if(v >= track[i].p || i===0){
+        var a=track[i], b=track[Math.min(i+1,track.length-1)];
+        if(a===b) return a;
+        var u=smooth(clamp((v-a.p)/(b.p-a.p),0,1));
+        return { x:lerp(a.x,b.x,u), y:lerp(a.y,b.y,u),
+                 z:Math.exp(lerp(Math.log(a.z),Math.log(b.z),u)) };   // zoom reads evenly in log space
+      }
+    }
+    return null;
   }
 
-  // 0 = wide shot, 1 = pushed all the way in on the subject
-  function camWeight(v){
-    if(v < 0.26) return 0;
-    if(v < 0.55) return ease((v-0.26)/0.29);   // push in
-    if(v < 0.63) return 1;                      // hold on the toast
-    if(v < 0.82) return 1-ease((v-0.63)/0.19);  // pull back for the full poster
-    return 0;
-  }
+  /* ---------- petals ----------
+     Diamonds, a sparkle and a few notes drift across the frame while the title
+     hands over to the beer, so the two scenes are joined by a flurry rather
+     than a cut.                                                              */
+  var PET = [];
+  (function(){
+    var seed=20260911;
+    function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+    var art=['assets/dia0.webp','assets/dia1.webp','assets/dia2.webp','assets/motif_6.webp'];
+    var glyphs=['♪','♫','♬','♩'];
+    var frag=document.createDocumentFragment();
+    for(var i=0;i<44;i++){
+      var el=document.createElement('b');
+      if(i%5===4){ el.textContent=glyphs[i%glyphs.length]; el.style.color = i%2 ? 'var(--green)' : 'var(--lime)'; }
+      else { var im=document.createElement('img'); im.src=art[i%4]; im.alt=''; el.appendChild(im); }
+      var size = 2.2 + rnd()*3.4;
+      el.style.width = 'clamp(16px,'+size.toFixed(2)+'vw,54px)';
+      if(i%5===4) el.style.fontSize = 'clamp(16px,'+size.toFixed(2)+'vw,54px)';
+      frag.appendChild(el);
+      PET.push({ el:el,
+        x0: rnd()*122-11, drift:(rnd()*2-1)*30,
+        sway: 3+rnd()*7, swayF: 1+rnd()*2, phase: rnd()*6.28,
+        r0: rnd()*360, spin:(rnd()*2-1)*420,
+        st: 0.085+rnd()*0.085, du: 0.09+rnd()*0.055,
+        sc: 0.55+rnd()*0.7 });
+    }
+    petals.appendChild(frag);
+  })();
 
   /* ---------- vibration ----------
-     Once the poster is complete, each scroll gives the mug and the people a
-     short damped shudder so the finished frame still feels alive.             */
-  var shake = 0, lastNow = 0;
-  function kick(){ if(!reduce && P >= 0.95) shake = Math.min(1, shake + 0.7); }
+     Once the poster is complete, scrolling gives the mug and the people a
+     slow, generous wobble — a pop bounce rather than a buzz.                 */
+  var shake = 0, lastNow = 0, lastKick = 0;
+  function kick(){
+    if(reduce || P < 0.95) return;
+    var n = performance.now();
+    if(n - lastKick < 260) return;          // one bounce per gesture, not per event
+    lastKick = n;
+    shake = Math.min(1, shake + 0.75);
+  }
+  if(!reduce) addEventListener('scroll', kick, {passive:true});
 
   var P=0;
-  var BEATS=[[0.00,'THE 20TH'],[0.18,'A BEER FOR 20 YEARS'],[0.44,'AND EVERYONE WHO CAME'],[0.72,'']];
+  var BEATS=[[0.00,'THE 20TH'],[0.13,'A BEER FOR 20 YEARS'],[0.30,'AND EVERYONE WHO CAME'],[0.78,'']];
   var lastBeat='';
 
   function frame(now){
@@ -273,14 +363,14 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var t=now/1000;
     var dt = lastNow ? Math.min(0.05,(now-lastNow)/1000) : 0;
     lastNow = now;
-    shake *= Math.exp(-dt*4.2);
+    shake *= Math.exp(-dt*1.5);
 
-    var f = focus(), cw = reduce ? 0 : camWeight(P);
-    if(f && cw > 0.001){
-      var k = 1 + (CAM_ZOOM-1)*cw;
-      var px = (50-f.x)*cw + Math.sin(t*0.40)*0.6*cw;   // a touch of handheld drift
-      var py = (50-f.y)*cw + Math.cos(t*0.31)*0.45*cw;
-      stage.style.transform = 'scale('+k+') translate('+px+'%,'+py+'%)';
+    if(trackW !== innerWidth) track = null;         // viewport changed — reframe the cuts
+    var cam = reduce ? null : camAt(P);
+    if(cam && cam.z > 1.001){
+      var px = (50-cam.x) + Math.sin(t*0.40)*0.5;   // a touch of handheld drift
+      var py = (50-cam.y) + Math.cos(t*0.31)*0.4;
+      stage.style.transform = 'scale('+cam.z+') translate('+px+'%,'+py+'%)';
     } else if(stage.style.transform){
       stage.style.transform = '';
     }
@@ -290,19 +380,34 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       var lp=ease(clamp((P-s.from)/(s.to-s.from),0,1)), inv=1-lp;
       var dx=s.dx, dy=s.dy;
       if(s.center){ var c=centre(p); if(c){ dx=c.tx; dy=c.ty; } }
-      var amb=0, ambR=0, ambX=0;
+      var amb=0, ambR=0, ambX=0, bounce=1;
       if(!reduce && lp>0.98){
         if(p.dataset.role==='motif'){ amb=Math.sin(t*0.8+i)*0.9; ambR=Math.sin(t*0.5+i)*2.5; }
         if(p.dataset.role==='dia'){ amb=Math.sin(t*0.6+i*1.7)*1.2; ambR=Math.sin(t*0.4+i)*4; }
       }
-      if(shake>0.002 && p.dataset.shake){
-        var ph = p.dataset.shake==='mug' ? 0 : 2.1;
-        ambX += Math.sin(t*38+ph*1.4)*1.10*shake;
-        amb  += Math.sin(t*44+ph)*1.25*shake;
-        ambR += Math.sin(t*41+ph*0.7)*1.40*shake;
+      if(shake>0.004 && p.dataset.shake){
+        var ph = p.dataset.shake==='mug' ? 0 : 1.7;
+        ambX  += Math.sin(t*15+ph*1.2)*2.4*shake;
+        amb   += Math.sin(t*17+ph)*2.8*shake;
+        ambR  += Math.sin(t*16+ph*0.6)*3.4*shake;
+        bounce = 1 + Math.sin(t*15+ph)*0.045*shake;
       }
-      p.style.opacity = (s.fade===false) ? 1 : clamp(lp*1.3,0,1);
-      p.style.transform = 'translate('+(dx*inv+ambX)+'%,'+(dy*inv+amb)+'%) rotate('+(s.rot*inv+ambR)+'deg) scale('+(s.sc+(1-s.sc)*lp)+')';
+      var op = (s.fade===false) ? 1 : clamp(lp*1.3,0,1);
+      var tr = 'translate('+(dx*inv+ambX)+'%,'+(dy*inv+amb)+'%) rotate('+(s.rot*inv+ambR)+'deg) scale('+((s.sc+(1-s.sc)*lp)*bounce)+')';
+      if(p._op!==op){ p.style.opacity = op; p._op=op; }
+      if(p._tr!==tr){ p.style.transform = tr; p._tr=tr; }
+    }
+
+    for(var q=0;q<PET.length;q++){
+      var d=PET[q], lq=(P-d.st)/d.du, o=0, ptr='';
+      if(!reduce && lq>0 && lq<1){
+        o = Math.pow(Math.sin(Math.PI*lq), 0.6);
+        var x = d.x0 + d.drift*lq + Math.sin(lq*6.283*d.swayF + d.phase + t*0.6)*d.sway;
+        var y = -25 + 150*lq;
+        ptr = 'translate('+(x/100*innerWidth)+'px,'+(y/100*innerHeight)+'px) rotate('+(d.r0+d.spin*lq+Math.sin(t*1.1+q)*10)+'deg) scale('+d.sc+')';
+      }
+      if(d._o!==o){ d.el.style.opacity=o; d._o=o; }
+      if(o && d._t!==ptr){ d.el.style.transform=ptr; d._t=ptr; }
     }
 
     var label='';
@@ -313,97 +418,6 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
-
-  /* ---------- one gesture, one beat ----------
-     Inside the hero the page does not free-scroll: however hard the wheel is
-     spun or the screen is flicked, the view glides to the next stop and stops
-     there. Input stays locked until the glide has finished AND the inertia
-     tail has gone quiet, so a single hard flick cannot skip a beat.           */
-  var STOPS=[0, 0.24, 0.44, 0.68, 0.80, 0.92, 1];
-  var idx=0, animating=false, locked=false, unlockTimer=null;
-
-  function range(){ return Math.max(1, hero.offsetHeight - innerHeight); }
-  function yFor(i){ return Math.round(STOPS[clamp(i,0,STOPS.length-1)]*range()); }
-  function nearest(){
-    var y=pageYOffset, best=0, bd=Infinity;
-    for(var i=0;i<STOPS.length;i++){ var d=Math.abs(yFor(i)-y); if(d<bd){ bd=d; best=i; } }
-    return best;
-  }
-  function atEnd(){ return pageYOffset >= range()-1; }
-  function inHero(){ return pageYOffset <= range()+1; }
-
-  function glide(toY, done){
-    var fromY=pageYOffset, d=toY-fromY, start=null;
-    if(Math.abs(d) < 1){ animating=false; if(done) done(); return; }
-    animating=true;
-    requestAnimationFrame(function step(ts){
-      if(start===null) start=ts;
-      var k=clamp((ts-start)/760,0,1);
-      var e = k<0.5 ? 4*k*k*k : 1-Math.pow(-2*k+2,3)/2;   // easeInOutCubic
-      scrollTo(0, fromY+d*e);
-      if(k<1) requestAnimationFrame(step);
-      else { animating=false; if(done) done(); }
-    });
-  }
-  function go(i){
-    idx=clamp(i,0,STOPS.length-1);
-    var last = idx===STOPS.length-1;
-    glide(yFor(idx), last ? kick : null);   // the finished poster gets a shudder
-  }
-
-  // release the lock only once the gesture's inertia has died down
-  function armUnlock(){
-    clearTimeout(unlockTimer);
-    unlockTimer=setTimeout(function(){
-      if(animating) armUnlock(); else locked=false;
-    }, 140);
-  }
-
-  // true when this input should be handed back to the browser
-  function passThrough(dir){ return dir > 0 && atEnd(); }
-
-  function advance(dir){
-    if(locked) return;
-    locked=true; armUnlock();
-    go((animating ? idx : nearest()) + dir);
-  }
-
-  if(!reduce){
-    addEventListener('wheel', function(e){
-      if(!inHero() || e.ctrlKey) return;
-      var dir = e.deltaY>0 ? 1 : -1;
-      if(!e.deltaY) return;
-      kick();
-      if(passThrough(dir)) return;      // poster is done — let the page scroll on
-      e.preventDefault();
-      if(locked){ armUnlock(); return; }  // inertia tail of the same flick
-      advance(dir);
-    }, {passive:false});
-
-    var touchY=null;
-    addEventListener('touchstart', function(e){ touchY=e.touches[0].clientY; }, {passive:true});
-    addEventListener('touchmove', function(e){
-      if(!inHero() || touchY===null) return;
-      var dy = touchY - e.touches[0].clientY, dir = dy>0 ? 1 : -1;
-      if(passThrough(dir)){ touchY=null; return; }
-      e.preventDefault();                 // no free dragging inside the hero
-      if(Math.abs(dy) < 28) return;       // below the swipe threshold
-      touchY=null; kick(); advance(dir);
-    }, {passive:false});
-    addEventListener('touchend', function(){ touchY=null; }, {passive:true});
-
-    addEventListener('keydown', function(e){
-      if(!inHero()) return;
-      var k=e.key, dir=0;
-      if(k==='ArrowDown'||k==='PageDown'||k===' '||k==='Spacebar') dir=1;
-      else if(k==='ArrowUp'||k==='PageUp') dir=-1;
-      else if(k==='Home'){ e.preventDefault(); locked=false; go(0); return; }
-      else return;
-      if(passThrough(dir)) return;
-      e.preventDefault();
-      kick(); advance(dir);
-    });
-  }
 
   var items=['GERMAN BEER','TOHOKU BEER','WINE','SAKE','BEEF','SAUSAGE','FRIT','OYSTERS','COFFEE','BREZEL','SWEETS','AND MUSIC'];
   function fill(el,list){ el.innerHTML = list.concat(list).map(function(x){return '<span>'+x+'</span>';}).join(''); }
