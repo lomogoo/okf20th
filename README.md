@@ -12,6 +12,8 @@ public/             ★ 公開されるのはこの中だけ
   404.html            Not Found ページ
   _headers            キャッシュ / セキュリティヘッダー
   assets/             ポスター入稿データから書き出した画像（webp）
+    mugbody / beer    pattern.webp を色で分離したもの。空のジョッキと中身を
+                      別レイヤーにして「ビールが注がれる」演出に使っています
     positions.json    各モチーフの配置座標（元データ・参照用）
 src/                元プロトタイプ（画像を base64 で埋め込んだ単一HTML・参照用／非公開）
 README.md           このファイル（非公開）

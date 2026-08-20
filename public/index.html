@@ -29,23 +29,53 @@ img{display:block;max-width:100%}
 :focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
 
 /* ---------- HERO ---------- */
-.hero{height:900svh;position:relative}
-.hero__sticky{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
-.hero__sticky::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,#fff 0%,var(--cream) 68%,#eaf0d4 100%)}
-.stage{position:relative;height:min(92svh,132vw);aspect-ratio:1734/2448;transform-origin:50% 50%;will-change:transform}
+.hero{height:1000svh;position:relative}
+.hero__sticky{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden;isolation:isolate}
+
+/* L1 — the room the whole thing sits in, cool at first, warm by the end */
+.wash{position:absolute;inset:0;z-index:0;background:radial-gradient(120% 80% at 50% 0%,#fff 0%,var(--cream) 68%,#eaf0d4 100%)}
+.wash__warm{position:absolute;inset:0;opacity:0;background:radial-gradient(120% 90% at 50% 42%,#fffaf0 0%,#fdf3d8 46%,#f2e7bd 100%)}
+/* L2 — the bloom of gratitude behind the crowd */
+.bloom{position:absolute;z-index:1;width:130vmax;height:130vmax;opacity:0;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,238,170,.95),rgba(255,240,190,.45) 42%,rgba(255,240,190,0) 72%)}
+
+/* L3 / L6 — confetti, far behind and close to the lens */
+.drift{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.drift--far{z-index:1}
+.drift--near{z-index:6}
+.drift b{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity;font-family:var(--display);line-height:1}
+.drift b img{width:100%;height:auto;display:block}
+
+/* L4 — the poster itself */
+.stage{position:relative;z-index:2;height:min(92svh,132vw);aspect-ratio:1734/2448;transform-origin:50% 50%;will-change:transform}
 .piece{position:absolute;will-change:transform,opacity;transform-origin:50% 50%}
 .piece.full{left:0;top:0;width:100%}
+.pour{overflow:hidden}
+.bubbles{position:absolute;inset:0;pointer-events:none}
+.bubbles i{position:absolute;left:0;top:0;display:block;border-radius:50%;opacity:0;
+  background:rgba(255,255,255,.9);box-shadow:0 0 0 2px rgba(232,196,20,.55),0 0 0 1px rgba(255,255,255,.9) inset;will-change:transform,opacity}
+.foam{position:absolute;inset:0;pointer-events:none}
+.foam i{position:absolute;left:0;top:0;display:block;border-radius:50%;opacity:0;background:#fff;will-change:transform,opacity}
 
-.petals{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
-.petals b{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity;font-family:var(--display);line-height:1}
-.petals b img{width:100%;height:auto;display:block}
+/* L5 — twenty marks, and the count they add up to */
+.years{position:absolute;inset:0;z-index:5;pointer-events:none;display:grid;place-items:center}
+.years b{position:absolute;left:50%;top:50%;width:clamp(15px,2.1vmin,26px);opacity:0;will-change:transform,opacity}
+.years b img{width:100%;height:auto;display:block}
+.years__seal{position:absolute;left:50%;top:50%;width:clamp(150px,27vmin,320px);opacity:0;will-change:transform,opacity}
+.years__count{
+  position:relative;text-align:center;font-family:var(--display);font-weight:700;opacity:0;
+  font-size:clamp(4.5rem,17vmin,11rem);line-height:.9;color:transparent;
+  -webkit-text-stroke:.035em var(--green);will-change:transform,opacity;
+}
+.years__count::before{content:attr(data-n);position:absolute;left:.045em;top:.05em;z-index:-1;color:var(--lime);-webkit-text-stroke:0}
+.years__label{display:block;font-size:.13em;letter-spacing:.5em;color:var(--green);-webkit-text-stroke:0;margin-top:1.1em}
 
 .beat{
-  position:absolute;left:50%;translate:-50% 0;bottom:12svh;text-align:center;
+  position:absolute;left:50%;translate:-50% 0;bottom:11svh;text-align:center;z-index:7;
   font-family:var(--display);font-size:.66rem;letter-spacing:.34em;color:var(--green);
   pointer-events:none;
 }
-.hint{position:absolute;bottom:5.5svh;left:50%;translate:-50% 0;font-family:var(--display);font-size:.66rem;letter-spacing:.34em;color:var(--green);display:flex;flex-direction:column;align-items:center;gap:.5em}
+.hint{position:absolute;bottom:5svh;left:50%;translate:-50% 0;z-index:7;font-family:var(--display);font-size:.66rem;letter-spacing:.34em;color:var(--green);display:flex;flex-direction:column;align-items:center;gap:.5em}
 .hint i{width:1px;height:32px;background:linear-gradient(var(--green),transparent);animation:drop 1.8s ease-in-out infinite}
 @keyframes drop{0%{transform:scaleY(.2);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(.2);transform-origin:bottom}}
 
@@ -153,14 +183,23 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
 <section class="hero" id="hero">
   <div class="hero__sticky">
+
+    <div class="wash"><div class="wash__warm" id="washWarm"></div></div>
+    <div class="bloom" id="bloom" aria-hidden="true"></div>
+    <div class="drift drift--far" id="driftFar" aria-hidden="true"></div>
+
     <div class="stage" id="stage">
-      <img class="piece full" data-role="mug"    src="assets/pattern.webp" alt="">
-      <img class="piece" data-role="mug"    style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
-      <img class="piece" data-role="title"  style="left:17.128%;top:60.784%;width:70.588%" src="assets/title.webp" alt="SENDAI OKTOBERFEST 20TH">
+      <!-- the empty glass, then the beer poured into it -->
+      <img class="piece full" data-role="glass" src="assets/mugbody.webp" alt="">
+      <div class="piece full pour" data-role="beer" id="pour"><img src="assets/beer.webp" alt=""></div>
+      <div class="bubbles" id="bubbles" aria-hidden="true"></div>
+      <!-- everyone who came -->
       <img class="piece" data-role="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
-      <img class="piece" data-role="final"  style="left:19.550%;top:21.732%;width:67.243%" src="assets/date.webp" alt="2026年9月11日金曜から9月27日日曜">
-      <img class="piece" data-role="final"  style="left:3.518%;top:34.518%;width:65.110%" src="assets/extras.webp" alt="">
-      <img class="piece" data-role="final"  style="left:3.172%;top:2.165%;width:65.167%" src="assets/deco.webp" alt="">
+      <!-- the glass outline sits in front of both -->
+      <img class="piece" data-role="rim"   style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
+      <div class="foam" id="foam" aria-hidden="true"></div>
+      <img class="piece" data-role="notes" style="left:3.172%;top:2.165%;width:65.167%" src="assets/deco.webp" alt="">
+      <img class="piece" data-role="title" style="left:17.128%;top:60.784%;width:70.588%" src="assets/title.webp" alt="SENDAI OKTOBERFEST 20TH">
       <img class="piece" data-role="motif" style="left:39.100%;top:10.458%;width:5.017%" src="assets/motif_0.webp" alt="">
       <img class="piece" data-role="motif" style="left:18.397%;top:12.418%;width:6.747%" src="assets/motif_1.webp" alt="">
       <img class="piece" data-role="motif" style="left:83.679%;top:54.289%;width:6.517%" src="assets/motif_2.webp" alt="">
@@ -169,6 +208,8 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       <img class="piece" data-role="motif" style="left:89.043%;top:70.425%;width:3.633%" src="assets/motif_5.webp" alt="">
       <img class="piece" data-role="motif" style="left:89.043%;top:76.593%;width:5.536%" src="assets/motif_6.webp" alt="">
       <img class="piece" data-role="motif" style="left:3.230%;top:84.191%;width:5.363%" src="assets/motif_7.webp" alt="">
+      <img class="piece" data-role="emblem" style="left:5.133%;top:2.328%;width:10.323%" src="assets/emblem.webp" alt="20th Anniversary">
+      <img class="piece" data-role="copy"   style="left:59.573%;top:5.310%;width:37.313%" src="assets/catchcopy.webp" alt="20年分の「ありがとう」。乾杯でつながる、笑顔の未来。">
       <img class="piece" data-role="dia" style="left:63.495%;top:0.245%;width:5.133%" src="assets/dia0.webp" alt="">
       <img class="piece" data-role="dia" style="left:91.753%;top:1.675%;width:5.536%" src="assets/dia1.webp" alt="">
       <img class="piece" data-role="dia" style="left:16.667%;top:1.797%;width:5.017%" src="assets/dia2.webp" alt="">
@@ -180,12 +221,18 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       <img class="piece" data-role="dia" style="left:6.805%;top:64.992%;width:4.614%" src="assets/dia2.webp" alt="">
       <img class="piece" data-role="dia" style="left:2.595%;top:75.776%;width:5.248%" src="assets/dia0.webp" alt="">
       <img class="piece" data-role="dia" style="left:82.641%;top:78.064%;width:3.633%" src="assets/dia1.webp" alt="">
-      <img class="piece" data-role="emblem" style="left:5.133%;top:2.328%;width:10.323%" src="assets/emblem.webp" alt="20th Anniversary">
-      <img class="piece" data-role="copy"   style="left:59.573%;top:5.310%;width:37.313%" src="assets/catchcopy.webp" alt="20年分の「ありがとう」。乾杯でつながる、笑顔の未来。">
+      <img class="piece" data-role="final"  style="left:19.550%;top:21.732%;width:67.243%" src="assets/date.webp" alt="2026年9月11日金曜から9月27日日曜">
+      <img class="piece" data-role="final"  style="left:3.518%;top:34.518%;width:65.110%" src="assets/extras.webp" alt="">
       <img class="piece" data-role="info"   style="left:3.287%;top:84.150%;width:94.752%" src="assets/infotext.webp" alt="">
       <img class="piece" data-role="sponsor" style="left:3.460%;top:91.258%;width:92.676%" src="assets/sponsors.webp" alt="">
     </div>
-    <div class="petals" id="petals" aria-hidden="true"></div>
+
+    <div class="years" id="years" aria-hidden="true">
+      <p class="years__count" id="count" data-n="1">1<span class="years__label">YEARS</span></p>
+      <img class="years__seal" id="seal" src="assets/emblem.webp" alt="">
+    </div>
+    <div class="drift drift--near" id="driftNear" aria-hidden="true"></div>
+
     <p class="beat" id="beat"></p>
     <div class="hint" id="hint"><i></i>SCROLL</div>
   </div>
@@ -259,165 +306,362 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 <script>
 (function(){
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hero   = document.getElementById('hero'),
-      stage  = document.getElementById('stage'),
-      hint   = document.getElementById('hint'),
-      beat   = document.getElementById('beat'),
-      petals = document.getElementById('petals');
-  var pieces = [].slice.call(document.querySelectorAll('.piece'));
+  var hero  = document.getElementById('hero'),
+      stage = document.getElementById('stage'),
+      warm  = document.getElementById('washWarm'),
+      bloom = document.getElementById('bloom'),
+      pour  = document.getElementById('pour'),
+      count = document.getElementById('count'),
+      years = document.getElementById('years'),
+      seal  = document.getElementById('seal'),
+      beat  = document.getElementById('beat'),
+      hint  = document.getElementById('hint');
   var AR = 1734/2448;                       // stage width / height
-  var TITLE_SC = innerWidth < 720 ? 1.22 : 2.05;   // narrow screens can't hold the big title
+  var TAU = Math.PI*2;
 
+  function clamp(v,a,b){ return v<a?a:v>b?b:v; }
+  function lerp(a,b,u){ return a+(b-a)*u; }
+  function span(v,a,b){ return clamp((v-a)/(b-a),0,1); }
+  function out(t){ return 1-Math.pow(1-t,3); }                 // settles gently
+  function inOut(t){ return t*t*t*(t*(t*6-15)+10); }           // smootherstep
+  function back(t){ var c=1.7; return 1+ (c+1)*Math.pow(t-1,3) + c*Math.pow(t-1,2); }
+
+  /* ================= the score =================
+     Six movements, each with room to land before the next begins.
+
+       .00 the empty glass          — nothing but the vessel
+       .08 EIN PROSIT               — the beer is poured, bubbles rise
+       .24 the foam, the music      — froth blooms, notes lift out of it
+       .30 everyone who came        — the crowd fills the glass, the camera leans in
+       .60 twenty                   — twenty marks light, one for each year
+       .78 danke                    — the warmth blooms, the thank-you is written
+       .86 the poster               — everything lands in its printed place        */
+
+  var ACT = {
+    pourB:[0.075,0.235], foam:[0.225,0.300],
+    twenty:[0.575,0.735], recede:[0.555,0.615], seal:[0.715,0.795],
+    clear:[0.800,0.865]
+  };
+
+  var pieces = [].slice.call(document.querySelectorAll('.piece'));
   var motifs = pieces.filter(function(p){return p.dataset.role==='motif';});
   var dias   = pieces.filter(function(p){return p.dataset.role==='dia';});
 
   pieces.forEach(function(p){
-    var role = p.dataset.role, cx = parseFloat(p.style.left||0)+3, s;
-    if(role==='title')       s={from:0.00,to:0.085,sc:TITLE_SC,center:true,fade:false};
-    else if(role==='mug')    s={from:0.145,to:0.260,sc:1.06,dx:0,dy:14};
-    else if(role==='people') s={from:0.285,to:0.385,sc:0.94,dx:0,dy:10};
-    else if(role==='final')  s={from:0.865,to:0.910,sc:1,dx:0,dy:4};
+    var role=p.dataset.role, cx=parseFloat(p.style.left||0)+3, s;
+    if(role==='glass')       s={from:0.000,to:0.085,sc:1.09,dy:3};
+    else if(role==='beer')   s={from:0.000,to:0.085,sc:1.09,dy:3,fade:false};
+    else if(role==='rim')    s={from:0.000,to:0.090,sc:1.09,dy:3};
+    else if(role==='title')  s={from:0.170,to:0.290,sc:0.94,dy:7};
+    else if(role==='notes')  s={from:0.240,to:0.330,sc:0.96,dy:5};
+    else if(role==='people') s={from:0.300,to:0.415,sc:0.95,dy:11};
     else if(role==='motif'){
       var k=motifs.indexOf(p), dir=cx<50?-1:1;
-      s={from:0.880+k*0.006,to:0.935+k*0.006,sc:0.55,dx:dir*38,dy:(k%2?18:-22),rot:dir*150};
+      s={from:0.330+k*0.011,to:0.450+k*0.011,sc:0.5,dx:dir*40,dy:(k%2?22:-26),rot:dir*160};
     }
+    else if(role==='emblem') s={from:0.858,to:0.925,sc:0.25,rot:-200};
+    else if(role==='copy')   s={from:0.845,to:0.915,sc:1,dx:7};
     else if(role==='dia'){
       var j=dias.indexOf(p);
-      s={from:0.885+j*0.005,to:0.940+j*0.005,sc:0.7,dx:(j%3-1)*8,dy:-46-(j%4)*10,rot:(j%2?1:-1)*180};
+      s={from:0.862+j*0.005,to:0.925+j*0.005,sc:0.7,dx:(j%3-1)*9,dy:-44-(j%4)*10,rot:(j%2?1:-1)*180};
     }
-    else if(role==='emblem')  s={from:0.895,to:0.945,sc:0.2,dx:0,dy:0,rot:-200};
-    else if(role==='copy')    s={from:0.915,to:0.960,sc:1,dx:9,dy:0};
-    else if(role==='info')    s={from:0.935,to:0.975,sc:1,dx:0,dy:5};
-    else if(role==='sponsor') s={from:0.955,to:1.000,sc:1,dx:0,dy:4};
+    else if(role==='final')  s={from:0.872,to:0.938,sc:1,dy:5};
+    else if(role==='info')   s={from:0.905,to:0.965,sc:1,dy:5};
+    else if(role==='sponsor')s={from:0.930,to:1.000,sc:1,dy:4};
     s.dx=s.dx||0; s.dy=s.dy||0; s.rot=s.rot||0;
     p._s=s;
   });
 
-  // title starts large and centred on the stage — needs its natural aspect
+  // a piece that starts centred on the stage needs its own aspect to get there
   function centre(p){
     if(p._c || !p.naturalWidth) return p._c;
     var L=parseFloat(p.style.left)||0, T=parseFloat(p.style.top)||0, W=parseFloat(p.style.width)||100;
-    var H = W * (p.naturalHeight/p.naturalWidth) * AR;       // height as % of stage height
-    p._c = { tx:(50-(L+W/2))/W*100, ty:(50-(T+H/2))/H*100 };
+    var H=W*(p.naturalHeight/p.naturalWidth)*AR;
+    p._c={ tx:(50-(L+W/2))/W*100, ty:(50-(T+H/2))/H*100 };
     return p._c;
   }
 
-  function ease(t){ return 1-Math.pow(1-t,3); }
-  function smooth(t){ return t*t*t*(t*(t*6-15)+10); }   // smootherstep — gentler starts and stops
-  function clamp(v,a,b){ return v<a?a:v>b?b:v; }
-  function lerp(a,b,u){ return a+(b-a)*u; }
+  /* ---------- the pour ----------
+     beer.webp is clipped from the top down, so the level climbs inside the
+     glass the outline has already drawn.                                    */
+  var BEER = { top:0.194, bottom:0.785 };     // where the beer sits in the stage box
+  function level(v){ return out(span(v, ACT.pourB[0], ACT.pourB[1])); }
 
-  /* ---------- camera ----------
-     Three close-ups on the toast, cut left → right → centre, then a pull back
-     to the whole poster. The stage is scaled and panned as one unit, so it
-     reads as a lens moving rather than images resizing.
-
-     Each cut is a box in people.webp's own pixel grid (1060 x 1269):
-     [centre x, centre y, width, height]                                      */
-  var CUTS = [
-    [280, 340, 460, 315],   // left  — the two players with their horns
-    [900, 250, 340, 285],   // right — the woman toasting and the trumpeter
-    [515, 360, 440, 300]    // centre— on the woman in red holding her glass up
-  ];
-  var subject = pieces.filter(function(p){return p.dataset.role==='people';})[0];
-  var track = null, trackW = 0;
-
-  // where the people illustration sits on the stage, in % of the stage box
-  function geom(){
-    var L=parseFloat(subject.style.left)||0, T=parseFloat(subject.style.top)||0, W=parseFloat(subject.style.width)||100;
-    return { L:L, T:T, W:W, H:W*(subject.naturalHeight/subject.naturalWidth)*AR };
-  }
-  // where a cut sits, and how far in you would have to go to frame it
-  function shot(cut){
-    var g=geom(), nw=subject.naturalWidth, nh=subject.naturalHeight;
-    var cw = cut[2]/nw*g.W, ch = cut[3]/nh*g.H;                  // cut size, in stage %
-    var fw = innerWidth/(stage.offsetWidth*cw/100),              // zoom that fills the width
-        fh = innerHeight/(stage.offsetHeight*ch/100);            // ...and the height
-    return { x:g.L+cut[0]/nw*g.W, y:g.T+cut[1]/nh*g.H,
-             contain:Math.min(fw,fh), cover:Math.max(fw,fh) };
-  }
-  // one zoom for all three cuts, so the camera only travels between them —
-  // set by whichever cut needs the widest view, with room left around it
-  function holdZoom(shots){
-    var gov = shots[0];
-    for(var i=1;i<shots.length;i++) if(shots[i].contain < gov.contain) gov = shots[i];
-    // a tall phone would otherwise sit too far back: lean in, but not so far
-    // that a subject leaves the frame
-    var lean = Math.min(1.45, Math.sqrt(gov.cover/gov.contain));
-    return Math.min(gov.contain * lean * 0.92, 9);
-  }
-  function buildTrack(){
-    if(!subject || !subject.naturalWidth) return null;
-    var c0=shot(CUTS[0]), c1=shot(CUTS[1]), c2=shot(CUTS[2]);
-    var Z = holdZoom([c0,c1,c2]);
-    var k = [
-      {p:0.000, x:50, y:50, z:1},
-      {p:0.380, x:50, y:50, z:1},                 // the toast lands and the lens is already moving
-      {p:0.455, x:c0.x, y:c0.y, z:Z},             // push in — left
-      {p:0.530, x:c0.x, y:c0.y, z:Z},
-      {p:0.600, x:c1.x, y:c1.y, z:Z},             // travel right, same distance
-      {p:0.675, x:c1.x, y:c1.y, z:Z},
-      {p:0.745, x:c2.x, y:c2.y, z:Z},             // travel back to the centre
-      {p:0.820, x:c2.x, y:c2.y, z:Z},
-      {p:0.880, x:50, y:50, z:1},                 // and only now, back to the poster
-      {p:1.000, x:50, y:50, z:1}
-    ];
-    trackW = innerWidth;
-    return k;
-  }
-  function camAt(v){
-    if(!track) track = buildTrack();
-    if(!track) return null;
-    for(var i=track.length-1;i>=0;i--){
-      if(v >= track[i].p || i===0){
-        var a=track[i], b=track[Math.min(i+1,track.length-1)];
-        if(a===b) return a;
-        var u=smooth(clamp((v-a.p)/(b.p-a.p),0,1));
-        return { x:lerp(a.x,b.x,u), y:lerp(a.y,b.y,u),
-                 z:Math.exp(lerp(Math.log(a.z),Math.log(b.z),u)) };   // zoom reads evenly in log space
-      }
+  /* ---------- bubbles ---------- */
+  var BUB=[];
+  (function(){
+    var seed=911, f=document.createDocumentFragment();
+    function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+    for(var i=0;i<36;i++){
+      var el=document.createElement('i');
+      var d=5+rnd()*9;
+      el.style.width=d+'px'; el.style.height=d+'px';
+      f.appendChild(el);
+      BUB.push({el:el, x:18+rnd()*58, dur:2.6+rnd()*3.4, off:rnd(), sway:0.6+rnd()*1.8, ph:rnd()*TAU});
     }
-    return null;
-  }
+    document.getElementById('bubbles').appendChild(f);
+  })();
 
-  /* ---------- petals ----------
-     Diamonds, a sparkle and a few notes drift across the frame while the title
-     hands over to the beer, so the two scenes are joined by a flurry rather
-     than a cut.                                                              */
-  var PET = [];
+  /* ---------- foam ---------- */
+  var FOAM=[];
+  (function(){
+    var seed=2026, f=document.createDocumentFragment();
+    function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+    for(var i=0;i<26;i++){
+      var el=document.createElement('i');
+      var d=5+rnd()*16;
+      el.style.width=d+'px'; el.style.height=d+'px';
+      f.appendChild(el);
+      FOAM.push({el:el, x:16+rnd()*62, rise:6+rnd()*16, dx:(rnd()*2-1)*10, st:rnd()*0.45, ph:rnd()*TAU});
+    }
+    document.getElementById('foam').appendChild(f);
+  })();
+
+  /* ---------- twenty marks ----------
+     One for each year, lit in turn around the count they add up to.          */
+  var MARK=[];
+  (function(){
+    var art=['assets/dia0.webp','assets/dia1.webp','assets/dia2.webp'], f=document.createDocumentFragment();
+    for(var i=0;i<20;i++){
+      var el=document.createElement('b'), im=document.createElement('img');
+      im.src=art[i%3]; im.alt=''; el.appendChild(im);
+      f.appendChild(el);
+      MARK.push({el:el, a:-Math.PI/2 + i*(TAU/20), i:i});
+    }
+    years.insertBefore(f, count);
+  })();
+
+  /* ---------- confetti ----------
+     Two depths: a far layer that barely moves and a near one that sweeps
+     past the lens. They open the festival and come back for the thank-you.   */
+  var FAR=[], NEAR=[];
   (function(){
     var seed=20260911;
     function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
     var art=['assets/dia0.webp','assets/dia1.webp','assets/dia2.webp','assets/motif_6.webp'];
     var glyphs=['♪','♫','♬','♩'];
-    var frag=document.createDocumentFragment();
-    for(var i=0;i<150;i++){
-      var el=document.createElement('b');
-      if(i%6===5){ el.textContent=glyphs[i%glyphs.length]; el.style.color = i%2 ? 'var(--green)' : 'var(--lime)'; }
-      else { var im=document.createElement('img'); im.src=art[i%4]; im.alt=''; el.appendChild(im); }
-      // a third of them fall close to the lens: bigger, faster, ahead of the rest
-      var near = (i%3===0);
-      var size = near ? 3.6+rnd()*3.6 : 1.6+rnd()*2.4;
-      var cap  = near ? 78 : 40;
-      el.style.width = 'clamp('+(near?22:12)+'px,'+size.toFixed(2)+'vw,'+cap+'px)';
-      if(i%6===5) el.style.fontSize = 'clamp('+(near?22:12)+'px,'+size.toFixed(2)+'vw,'+cap+'px)';
-      frag.appendChild(el);
-      PET.push({ el:el,
-        x0: rnd()*128-14, drift:(rnd()*2-1)*34,
-        sway: 3+rnd()*8, swayF: 0.8+rnd()*2.2, phase: rnd()*6.28,
-        r0: rnd()*360, spin:(rnd()*2-1)*400,
-        // they start with the very first turn of the wheel, and the tight
-        // stagger fills the screen at once before thinning out
-        st: 0.016+Math.pow(rnd(),1.6)*0.070,
-        du: (near?0.075:0.105)+rnd()*0.05,
-        sc: 0.6+rnd()*0.6,
-        // half of them come back to drift over the finished poster
-        drifts: (i%2===0), fdur: 17+rnd()*17, foff: rnd() });
+    function build(host, n, near, list){
+      var f=document.createDocumentFragment();
+      for(var i=0;i<n;i++){
+        var el=document.createElement('b');
+        if(i%6===5){ el.textContent=glyphs[i%4]; el.style.color = i%2?'var(--green)':'var(--lime)'; }
+        else { var im=document.createElement('img'); im.src=art[i%4]; im.alt=''; el.appendChild(im); }
+        var size = near ? 3.4+rnd()*3.8 : 1.3+rnd()*2.0;
+        var cap  = near ? 74 : 34;
+        el.style.width='clamp('+(near?20:10)+'px,'+size.toFixed(2)+'vw,'+cap+'px)';
+        if(i%6===5) el.style.fontSize='clamp('+(near?20:10)+'px,'+size.toFixed(2)+'vw,'+cap+'px)';
+        f.appendChild(el);
+        list.push({ el:el, near:near,
+          x0: rnd()*128-14, drift:(rnd()*2-1)*30,
+          sway: 3+rnd()*8, swayF: 0.8+rnd()*2.2, ph: rnd()*TAU,
+          r0: rnd()*360, spin:(rnd()*2-1)*380,
+          st: 0.014+Math.pow(rnd(),1.6)*0.062,
+          du: (near?0.075:0.110)+rnd()*0.05,
+          sc: 0.6+rnd()*0.6,
+          fdur: 15+rnd()*19, foff: rnd() });
+      }
+      host.appendChild(f);
     }
-    petals.appendChild(frag);
+    build(document.getElementById('driftFar'),  86, false, FAR);
+    build(document.getElementById('driftNear'), 44, true,  NEAR);
   })();
 
-  var lastNow = 0;
+  /* ---------- camera ----------
+     One lean towards the crowd while they arrive, held long enough to read
+     their faces, then back out so the poster can be seen whole.              */
+  var subject = pieces.filter(function(p){return p.dataset.role==='people';})[0];
+  var track=null, trackW=0;
+  function crowd(){
+    var L=parseFloat(subject.style.left)||0, T=parseFloat(subject.style.top)||0, W=parseFloat(subject.style.width)||100;
+    var H=W*(subject.naturalHeight/subject.naturalWidth)*AR;
+    return { x:L+W*0.52, y:T+H*0.30 };            // the raised glasses, not the feet
+  }
+  function build(){
+    if(!subject || !subject.naturalWidth) return null;
+    var c=crowd();
+    var Z = innerWidth < 720 ? 1.62 : 1.95;
+    trackW=innerWidth;
+    return [
+      {p:0.000, x:50, y:50, z:1.00},
+      {p:0.300, x:50, y:50, z:1.00},
+      {p:0.430, x:c.x, y:c.y, z:Z},              // lean in as they arrive
+      {p:0.540, x:c.x, y:c.y, z:Z},              // and stay a while
+      {p:0.578, x:50, y:50, z:1.00},
+      {p:1.000, x:50, y:50, z:1.00}
+    ];
+  }
+  function camAt(v){
+    if(!track) track=build();
+    if(!track) return null;
+    for(var i=track.length-1;i>=0;i--){
+      if(v>=track[i].p || i===0){
+        var a=track[i], b=track[Math.min(i+1,track.length-1)];
+        if(a===b) return a;
+        var u=inOut(clamp((v-a.p)/(b.p-a.p),0,1));
+        return { x:lerp(a.x,b.x,u), y:lerp(a.y,b.y,u),
+                 z:Math.exp(lerp(Math.log(a.z),Math.log(b.z),u)) };
+      }
+    }
+    return null;
+  }
+
+  /* ---------- progress ----------
+     The poster follows the scroll but keeps its own pace: a hard flick moves
+     you down the page, it does not fast-forward the film.                    */
+  var P=0, S=0, started=false, lastNow=0;
+  var LAG=0.42, SLOW=0.20, QUICK=0.85;
+  function settle(dt){
+    if(reduce){ S=1; return; }
+    if(!started){ S=P; started=true; return; }
+    var d=P-S;
+    if(Math.abs(d)<0.0002){ S=P; return; }
+    var paced=(S>0.26&&S<0.90)||(P>0.26&&P<0.90);       // the filmed part
+    S += clamp(d*(1-Math.exp(-dt/LAG)), -(paced?SLOW:QUICK)*dt, (paced?SLOW:QUICK)*dt);
+  }
+
+  var BEATS=[[0.00,'THE GLASS IS EMPTY'],[0.09,'EIN PROSIT'],[0.24,'AND THE MUSIC STARTS'],
+             [0.31,'EVERYONE WHO CAME'],[0.58,'TWENTY YEARS'],[0.80,'DANKE — ありがとう'],[0.92,'']];
+  var lastBeat='', lastN=0;
+
+  function frame(now){
+    var r=hero.getBoundingClientRect();
+    P = reduce ? 1 : clamp(-r.top/(hero.offsetHeight-innerHeight),0,1);
+    var t=now/1000, dt=lastNow?Math.min(0.05,(now-lastNow)/1000):0;
+    lastNow=now; settle(dt);
+    var W=innerWidth, H=innerHeight;
+
+    /* --- L1 the room warms through --- */
+    warm.style.opacity = span(S,0.56,0.84)*0.78;
+
+    /* --- L2 the bloom of gratitude --- */
+    var bl = span(S,0.74,0.86) * (1-span(S,0.94,1.00)*0.35);
+    bloom.style.opacity = bl*0.9;
+    bloom.style.transform = 'scale('+(0.45+bl*0.62)+')';
+
+    /* --- L4 the poster --- */
+    // the poster draws back so the twenty years have the frame to themselves
+    var rec = span(S,ACT.recede[0],ACT.recede[1]) * (1-span(S,ACT.clear[0],ACT.clear[1]));
+    var cam = reduce ? null : camAt(S);
+    var z = (cam?cam.z:1) * (1-rec*0.15);
+    if(cam && (z<0.999 || z>1.001)){
+      stage.style.transform='scale('+z+') translate('+((50-cam.x)+Math.sin(t*0.21)*0.4)+'%,'+((50-cam.y)+Math.cos(t*0.16)*0.3)+'%)';
+    } else if(stage.style.transform){ stage.style.transform=''; }
+    var so = 1-rec*0.80;
+    if(stage._op!==so){ stage.style.opacity=so; stage._op=so; }
+
+    var lvl = reduce ? 1 : level(S);
+    var surface = BEER.bottom - (BEER.bottom-BEER.top)*lvl;     // fraction down the stage
+    pour.style.clipPath = 'inset('+(surface*100).toFixed(2)+'% 0 0 0)';
+
+    for(var i=0;i<pieces.length;i++){
+      var p=pieces[i], s=p._s;
+      var raw=clamp((S-s.from)/(s.to-s.from),0,1);
+      var lp=s.pop?back(raw):out(raw), inv=1-lp;
+      var dx=s.dx, dy=s.dy;
+      if(s.center){ var c=centre(p); if(c){ dx=c.tx; dy=c.ty; } }
+      var amb=0, ambR=0;
+      // the idle sway is for the wide view; while the lens is in close it only
+      // costs repaints at high magnification, and the camera drift covers it
+      if(!reduce && raw>0.98 && z<1.15){
+        var role=p.dataset.role;
+        if(role==='motif'){ amb=Math.sin(t*0.75+i)*0.9;  ambR=Math.sin(t*0.5+i)*2.4; }
+        if(role==='dia'){   amb=Math.sin(t*0.6+i*1.7)*1.1; ambR=Math.sin(t*0.4+i)*3.6; }
+        // the crowd breathes together once they are all here
+        if(role==='people'){ amb=Math.sin(t*0.55)*0.5*(1-span(S,0.86,0.94)); }
+      }
+      var op = (s.fade===false)?1:clamp(raw*1.35,0,1);
+      var tr = 'translate('+(dx*(1-lp))+'%,'+(dy*(1-lp)+amb)+'%) rotate('+(s.rot*(1-lp)+ambR)+'deg) scale('+(s.sc+(1-s.sc)*lp)+')';
+      if(p._op!==op){ p.style.opacity=op; p._op=op; }
+      if(p._tr!==tr){ p.style.transform=tr; p._tr=tr; }
+    }
+
+    /* --- bubbles, only under the surface --- */
+    var bubOn = reduce ? 0 : span(S,0.10,0.20)*(1-span(S,0.30,0.40));
+    for(var q=0;q<BUB.length;q++){
+      var b=BUB[q], o=0, btr='';
+      if(bubOn>0.01){
+        var lb=((t/b.dur + b.off) % 1);
+        var by = BEER.bottom - (BEER.bottom-surface)*lb;        // rises to the current level
+        if(by > surface){
+          o = Math.sin(Math.PI*lb)*0.75*bubOn;
+          btr='translate('+((b.x + Math.sin(lb*TAU+b.ph)*b.sway)/100*stage.offsetWidth)+'px,'+(by*stage.offsetHeight)+'px)';
+        }
+      }
+      if(b._o!==o){ b.el.style.opacity=o; b._o=o; }
+      if(o && b._t!==btr){ b.el.style.transform=btr; b._t=btr; }
+    }
+
+    /* --- foam breaking over the rim --- */
+    var foamOn = reduce ? 0 : span(S,ACT.foam[0],ACT.foam[0]+0.03)*(1-span(S,ACT.foam[1],ACT.foam[1]+0.06));
+    for(var g=0;g<FOAM.length;g++){
+      var fm=FOAM[g], fo=0, ftr='';
+      if(foamOn>0.01){
+        var lf=clamp((span(S,ACT.foam[0],ACT.foam[1]+0.05)-fm.st)/(1-fm.st),0,1);
+        fo = Math.sin(Math.PI*lf)*0.9*foamOn;
+        ftr='translate('+((fm.x+fm.dx*lf)/100*stage.offsetWidth)+'px,'+((BEER.top-fm.rise/100*lf)*stage.offsetHeight)+'px) scale('+(0.5+lf*0.9)+')';
+      }
+      if(fm._o!==fo){ fm.el.style.opacity=fo; fm._o=fo; }
+      if(fo && fm._t!==ftr){ fm.el.style.transform=ftr; fm._t=ftr; }
+    }
+
+    /* --- twenty marks and the count --- */
+    var lit = 0, R = Math.min(W,H)*0.30, ringOut = span(S,ACT.clear[0],ACT.clear[1]);
+    for(var m=0;m<MARK.length;m++){
+      var k=MARK[m], up=span(S, ACT.twenty[0]+m*0.0060, ACT.twenty[0]+m*0.0060+0.020);
+      if(up>0.5) lit=m+1;
+      var e=back(up);
+      var rad=R*(0.70+0.30*e) + ringOut*R*0.45;
+      var mo=up*(1-ringOut);
+      var mtr='translate('+(Math.cos(k.a)*rad)+'px,'+(Math.sin(k.a)*rad)+'px) translate(-50%,-50%) rotate('+(k.i*18+(1-e)*140+Math.sin(t*0.5+m)*6)+'deg) scale('+(0.2+e*0.8)+')';
+      if(k._o!==mo){ k.el.style.opacity=mo; k._o=mo; }
+      if(mo && k._t!==mtr){ k.el.style.transform=mtr; k._t=mtr; }
+    }
+    var cOn = span(S,ACT.twenty[0],ACT.twenty[0]+0.028)*(1-span(S,0.700,0.735));
+    if(lastN!==lit){ count.firstChild.nodeValue = lit||1; count.setAttribute('data-n', lit||1); lastN=lit; }
+    if(count._o!==cOn){ count.style.opacity=cOn; count._o=cOn; }
+    count.style.transform = 'scale('+(0.86+cOn*0.14)+')';
+
+    // and the seal comes down on top of them
+    var up2 = span(S,ACT.seal[0],ACT.seal[1]), sOut = span(S,ACT.clear[0],ACT.clear[1]);
+    var sO = up2*(1-sOut);
+    if(seal._o!==sO){ seal.style.opacity=sO; seal._o=sO; }
+    if(sO) seal.style.transform='translate(-50%,-50%) rotate('+((1-back(up2))*-110)+'deg) scale('+(0.3+back(up2)*0.7)*(1+sOut*0.25)+')';
+
+    /* --- confetti, both depths --- */
+    var back2 = reduce ? 0 : span(S,0.820,0.900);
+    drift(FAR,  t, W, H, back2, -1);
+    drift(NEAR, t, W, H, back2,  1);
+
+    var label='';
+    for(var bb=0;bb<BEATS.length;bb++){ if(S>=BEATS[bb][0]) label=BEATS[bb][1]; }
+    if(label!==lastBeat){ beat.textContent=label; lastBeat=label; }
+    beat.style.opacity = label?0.9:0;
+    hint.style.opacity = clamp(1-S*11,0,1);
+    if(pending.length) reveals();
+    requestAnimationFrame(frame);
+  }
+
+  // the opening flurry, and the same shapes returning for the thank-you
+  function drift(list, t, W, H, again, dir){
+    for(var q=0;q<list.length;q++){
+      var d=list[q], o=0, tr='', x, y;
+      var lq=(S-d.st)/d.du;
+      if(!reduce && lq>0 && lq<1){
+        o=Math.pow(Math.sin(Math.PI*lq),0.6)*(d.near?0.95:0.7);
+        x=d.x0 + d.drift*lq + Math.sin(lq*TAU*d.swayF + d.ph + t*0.6)*d.sway;
+        y=-25 + 150*lq;
+        tr='translate('+(x/100*W)+'px,'+(y/100*H)+'px) rotate('+(d.r0+d.spin*lq+Math.sin(t*1.1+q)*10)+'deg) scale('+d.sc+')';
+      } else if(again>0.01){
+        var lf=(t/d.fdur + d.foff)%1;
+        o=Math.pow(Math.sin(Math.PI*lf),0.7)*again*(d.near?0.7:0.5);
+        x=d.x0 + Math.sin(lf*TAU*d.swayF + d.ph)*d.sway*1.6 + dir*Math.sin(t*0.13+q)*1.5;
+        y=-22 + 146*lf;
+        tr='translate('+(x/100*W)+'px,'+(y/100*H)+'px) rotate('+(d.r0+d.spin*lf*0.3+Math.sin(t*0.45+q)*9)+'deg) scale('+(d.sc*0.92)+')';
+      }
+      if(d._o!==o){ d.el.style.opacity=o; d._o=o; }
+      if(o && d._t!==tr){ d.el.style.transform=tr; d._t=tr; }
+    }
+  }
 
   var pending=[];
   function reveals(){
@@ -428,91 +672,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     }
   }
 
-  var P=0, S=0, started=false;
-  var LAG = 0.40,       // seconds for the animation to settle onto the scroll
-      CAM_SPEED = 0.20,  // while the lens is moving, this is as fast as it goes
-      REST_SPEED = 0.85; // elsewhere it may catch up to the scroll quickly
-
-  // The poster follows the scroll, but the camera moves keep their own pace:
-  // flick the wheel as hard as you like and the push-in, the travel across and
-  // the pull back still play at an even speed.
-  function settle(dt){
-    if(reduce){ S = P; return; }
-    if(!started){ S = P; started = true; return; }
-    var d = P - S;
-    if(Math.abs(d) < 0.0002){ S = P; return; }
-    var step = d * (1 - Math.exp(-dt/LAG));
-    var lens = (S > 0.340 && S < 0.905) || (P > 0.340 && P < 0.905);
-    var cap  = (lens ? CAM_SPEED : REST_SPEED) * dt;
-    S += clamp(step, -cap, cap);
-  }
-
-  var BEATS=[[0.00,'THE 20TH'],[0.145,'A BEER FOR 20 YEARS'],[0.330,'AND EVERYONE WHO CAME'],[0.880,'']];
-  var lastBeat='';
-
-  function frame(now){
-    var r=hero.getBoundingClientRect();
-    P = reduce ? 1 : clamp(-r.top/(hero.offsetHeight-innerHeight),0,1);
-    var t=now/1000;
-    var dt = lastNow ? Math.min(0.05,(now-lastNow)/1000) : 0;
-    lastNow = now;
-    settle(dt);
-
-    if(trackW !== innerWidth) track = null;         // viewport changed — reframe the cuts
-    var cam = reduce ? null : camAt(S);
-    if(cam && cam.z > 1.001){
-      var px = (50-cam.x) + Math.sin(t*0.22)*0.45;  // a touch of handheld drift
-      var py = (50-cam.y) + Math.cos(t*0.17)*0.35;
-      stage.style.transform = 'scale('+cam.z+') translate('+px+'%,'+py+'%)';
-    } else if(stage.style.transform){
-      stage.style.transform = '';
-    }
-
-    for(var i=0;i<pieces.length;i++){
-      var p=pieces[i], s=p._s;
-      var lp=ease(clamp((S-s.from)/(s.to-s.from),0,1)), inv=1-lp;
-      var dx=s.dx, dy=s.dy;
-      if(s.center){ var c=centre(p); if(c){ dx=c.tx; dy=c.ty; } }
-      var amb=0, ambR=0;
-      if(!reduce && lp>0.98){
-        if(p.dataset.role==='motif'){ amb=Math.sin(t*0.8+i)*0.9; ambR=Math.sin(t*0.5+i)*2.5; }
-        if(p.dataset.role==='dia'){ amb=Math.sin(t*0.6+i*1.7)*1.2; ambR=Math.sin(t*0.4+i)*4; }
-      }
-      var op = (s.fade===false) ? 1 : clamp(lp*1.3,0,1);
-      var tr = 'translate('+(dx*inv)+'%,'+(dy*inv+amb)+'%) rotate('+(s.rot*inv+ambR)+'deg) scale('+(s.sc+(1-s.sc)*lp)+')';
-      if(p._op!==op){ p.style.opacity = op; p._op=op; }
-      if(p._tr!==tr){ p.style.transform = tr; p._tr=tr; }
-    }
-
-    // once the poster is whole, the same shapes come back and simply hang in
-    // the air over it, drifting on their own clock rather than on the scroll
-    var adrift = reduce ? 0 : clamp((S-0.925)/0.045,0,1);
-    for(var q=0;q<PET.length;q++){
-      var d=PET[q], lq=(S-d.st)/d.du, o=0, ptr='', x, y;
-      if(!reduce && lq>0 && lq<1){
-        o = Math.pow(Math.sin(Math.PI*lq), 0.6);
-        x = d.x0 + d.drift*lq + Math.sin(lq*6.283*d.swayF + d.phase + t*0.6)*d.sway;
-        y = -25 + 150*lq;
-        ptr = 'translate('+(x/100*innerWidth)+'px,'+(y/100*innerHeight)+'px) rotate('+(d.r0+d.spin*lq+Math.sin(t*1.1+q)*10)+'deg) scale('+d.sc+')';
-      } else if(adrift > 0.01 && d.drifts){
-        var lf = (t/d.fdur + d.foff) % 1;
-        o = Math.pow(Math.sin(Math.PI*lf), 0.7) * adrift * 0.8;
-        x = d.x0 + Math.sin(lf*6.283*d.swayF + d.phase)*d.sway*1.6;
-        y = -22 + 146*lf;
-        ptr = 'translate('+(x/100*innerWidth)+'px,'+(y/100*innerHeight)+'px) rotate('+(d.r0+d.spin*lf*0.3+Math.sin(t*0.45+q)*9)+'deg) scale('+(d.sc*0.9)+')';
-      }
-      if(d._o!==o){ d.el.style.opacity=o; d._o=o; }
-      if(o && d._t!==ptr){ d.el.style.transform=ptr; d._t=ptr; }
-    }
-
-    var label='';
-    for(var b=0;b<BEATS.length;b++){ if(S>=BEATS[b][0]) label=BEATS[b][1]; }
-    if(label!==lastBeat){ beat.textContent=label; lastBeat=label; }
-    beat.style.opacity = label ? 0.9 : 0;
-    hint.style.opacity = clamp(1-S*9,0,1);
-    if(pending.length) reveals();
-    requestAnimationFrame(frame);
-  }
+  addEventListener('resize', function(){ track=null; pieces.forEach(function(p){ p._c=null; }); });
   requestAnimationFrame(frame);
 
   var items=['GERMAN BEER','TOHOKU BEER','WINE','SAKE','BEEF','SAUSAGE','FRIT','OYSTERS','COFFEE','BREZEL','SWEETS','AND MUSIC'];
@@ -520,8 +680,6 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   fill(document.getElementById('t1'), items);
   fill(document.getElementById('t2'), items.slice().reverse());
 
-  // reveals are checked by position rather than by observer, so a jump to the
-  // bottom of a page this tall can never leave a section stuck invisible
   pending = [].slice.call(document.querySelectorAll('.reveal,.danke'));
 })();
 </script>
