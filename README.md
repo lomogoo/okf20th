@@ -57,7 +57,4 @@ python3 -m http.server 8000
 
 ## 注意
 
-- ページ下部に固定表示されている「PROTOTYPE — ポスター入稿データ（.ai）から自動生成」の
-  帯は元データのまま残しています。本公開時は `index.html` の
-  `<div class="proto">…</div>` を削除してください。
 - フォントは Google Fonts（Comfortaa / Zen Kaku Gothic New）を CDN から読み込みます。
