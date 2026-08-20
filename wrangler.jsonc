@@ -1,0 +1,12 @@
+{
+  // Cloudflare Workers (static assets) の設定。
+  // "name" は Cloudflare 側の Worker 名と一致している必要があります。
+  "name": "okf20th",
+  "compatibility_date": "2026-08-15",
+  "assets": {
+    // 公開するファイルはすべて public/ 配下。README や src/ は配信されません。
+    "directory": "./public",
+    // 存在しないパスは public/404.html を 404 として返す
+    "not_found_handling": "404-page"
+  }
+}
