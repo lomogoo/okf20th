@@ -29,7 +29,7 @@ img{display:block;max-width:100%}
 :focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
 
 /* ---------- HERO ---------- */
-.hero{height:560svh;position:relative}
+.hero{height:900svh;position:relative}
 .hero__sticky{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
 .hero__sticky::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,#fff 0%,var(--cream) 68%,#eaf0d4 100%)}
 .stage{position:relative;height:min(92svh,132vw);aspect-ratio:1734/2448;transform-origin:50% 50%;will-change:transform}
@@ -53,7 +53,7 @@ img{display:block;max-width:100%}
 .wrap{width:min(1080px,90vw);margin-inline:auto}
 .eyebrow{font-family:var(--display);font-size:.68rem;letter-spacing:.3em;color:var(--green);display:flex;align-items:center;gap:.9em;margin-bottom:1.6rem}
 .eyebrow::after{content:"";flex:1;height:1px;background:currentColor;opacity:.35}
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.reveal{opacity:0;transform:translateY(34px);transition:opacity 1.5s cubic-bezier(.16,.8,.3,1),transform 1.5s cubic-bezier(.16,.8,.3,1)}
 .reveal.in{opacity:1;transform:none}
 
 /* ---------- thanks ---------- */
@@ -82,8 +82,8 @@ img{display:block;max-width:100%}
 
 /* ---------- ticker ---------- */
 .ticker{padding:7svh 0;background:var(--green);color:var(--cream);overflow:hidden}
-.ticker__row{display:flex;width:max-content;animation:slide 44s linear infinite}
-.ticker__row:nth-child(2){animation-duration:62s;animation-direction:reverse;opacity:.42}
+.ticker__row{display:flex;width:max-content;animation:slide 78s linear infinite}
+.ticker__row:nth-child(2){animation-duration:108s;animation-direction:reverse;opacity:.42}
 .ticker__row span{font-family:var(--display);font-weight:600;font-size:clamp(1.5rem,5vw,3.2rem);padding-inline:.55em;letter-spacing:.04em;white-space:nowrap}
 .ticker__row span::after{content:"◆";font-size:.42em;vertical-align:.5em;margin-left:.6em;color:var(--lime)}
 @keyframes slide{to{transform:translateX(-50%)}}
@@ -205,22 +205,22 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
   pieces.forEach(function(p){
     var role = p.dataset.role, cx = parseFloat(p.style.left||0)+3, s;
-    if(role==='title')       s={from:0.00,to:0.13,sc:TITLE_SC,center:true,fade:false};
-    else if(role==='mug')    s={from:0.13,to:0.27,sc:1.06,dx:0,dy:14};
-    else if(role==='people') s={from:0.25,to:0.37,sc:0.94,dx:0,dy:10};
-    else if(role==='final')  s={from:0.75,to:0.84,sc:1,dx:0,dy:4};
+    if(role==='title')       s={from:0.00,to:0.085,sc:TITLE_SC,center:true,fade:false};
+    else if(role==='mug')    s={from:0.145,to:0.260,sc:1.06,dx:0,dy:14};
+    else if(role==='people') s={from:0.285,to:0.390,sc:0.94,dx:0,dy:10};
+    else if(role==='final')  s={from:0.865,to:0.910,sc:1,dx:0,dy:4};
     else if(role==='motif'){
       var k=motifs.indexOf(p), dir=cx<50?-1:1;
-      s={from:0.78+k*0.008,to:0.90+k*0.008,sc:0.55,dx:dir*38,dy:(k%2?18:-22),rot:dir*150};
+      s={from:0.880+k*0.006,to:0.935+k*0.006,sc:0.55,dx:dir*38,dy:(k%2?18:-22),rot:dir*150};
     }
     else if(role==='dia'){
       var j=dias.indexOf(p);
-      s={from:0.79+j*0.007,to:0.91+j*0.007,sc:0.7,dx:(j%3-1)*8,dy:-46-(j%4)*10,rot:(j%2?1:-1)*180};
+      s={from:0.885+j*0.005,to:0.940+j*0.005,sc:0.7,dx:(j%3-1)*8,dy:-46-(j%4)*10,rot:(j%2?1:-1)*180};
     }
-    else if(role==='emblem')  s={from:0.82,to:0.91,sc:0.2,dx:0,dy:0,rot:-200};
-    else if(role==='copy')    s={from:0.85,to:0.93,sc:1,dx:9,dy:0};
-    else if(role==='info')    s={from:0.88,to:0.96,sc:1,dx:0,dy:5};
-    else if(role==='sponsor') s={from:0.91,to:1.00,sc:1,dx:0,dy:4};
+    else if(role==='emblem')  s={from:0.895,to:0.945,sc:0.2,dx:0,dy:0,rot:-200};
+    else if(role==='copy')    s={from:0.915,to:0.960,sc:1,dx:9,dy:0};
+    else if(role==='info')    s={from:0.935,to:0.975,sc:1,dx:0,dy:5};
+    else if(role==='sponsor') s={from:0.955,to:1.000,sc:1,dx:0,dy:4};
     s.dx=s.dx||0; s.dy=s.dy||0; s.rot=s.rot||0;
     p._s=s;
   });
@@ -235,7 +235,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   }
 
   function ease(t){ return 1-Math.pow(1-t,3); }
-  function smooth(t){ return t*t*(3-2*t); }
+  function smooth(t){ return t*t*t*(t*(t*6-15)+10); }   // smootherstep — gentler starts and stops
   function clamp(v,a,b){ return v<a?a:v>b?b:v; }
   function lerp(a,b,u){ return a+(b-a)*u; }
 
@@ -247,9 +247,9 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
      Each cut is a box in people.webp's own pixel grid (1060 x 1269):
      [centre x, centre y, width, height]                                      */
   var CUTS = [
-    [280, 330, 380, 250],   // left  — the two players with their horns
-    [910, 232, 270, 215],   // right — the woman toasting and the trumpeter
-    [622, 370, 335, 190]    // centre— the group raising their glasses
+    [280, 340, 460, 315],   // left  — the two players with their horns
+    [900, 250, 340, 285],   // right — the woman toasting and the trumpeter
+    [515, 360, 440, 300]    // centre— on the woman in red holding her glass up
   ];
   var subject = pieces.filter(function(p){return p.dataset.role==='people';})[0];
   var track = null, trackW = 0;
@@ -259,39 +259,40 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var L=parseFloat(subject.style.left)||0, T=parseFloat(subject.style.top)||0, W=parseFloat(subject.style.width)||100;
     return { L:L, T:T, W:W, H:W*(subject.naturalHeight/subject.naturalWidth)*AR };
   }
-  // frame one cut: centre it and zoom until the box fills the viewport
+  // where a cut sits, and how far in you would have to go to frame it
   function shot(cut){
     var g=geom(), nw=subject.naturalWidth, nh=subject.naturalHeight;
     var cw = cut[2]/nw*g.W, ch = cut[3]/nh*g.H;                  // cut size, in stage %
     var fw = innerWidth/(stage.offsetWidth*cw/100),              // zoom that fills the width
         fh = innerHeight/(stage.offsetHeight*ch/100);            // ...and the height
-    var contain = Math.min(fw,fh), cover = Math.max(fw,fh);
-    // on a tall phone a width-fit leaves the faces small, so lean towards the
-    // tighter framing — but never far enough to push a subject out of frame
-    var z = contain * Math.min(1.35, Math.sqrt(cover/contain));
-    return { x:g.L+cut[0]/nw*g.W, y:g.T+cut[1]/nh*g.H, z:Math.min(z,9) };
+    return { x:g.L+cut[0]/nw*g.W, y:g.T+cut[1]/nh*g.H,
+             contain:Math.min(fw,fh), cover:Math.max(fw,fh) };
   }
-  // a swing between two cuts eases out a little, the way a real pan would
-  function swing(a,b,p){
-    return { p:p, x:(a.x+b.x)/2, y:(a.y+b.y)/2, z:Math.min(a.z,b.z)*0.62 };
+  // one zoom for all three cuts, so the camera only travels between them —
+  // set by whichever cut needs the widest view, with room left around it
+  function holdZoom(shots){
+    var gov = shots[0];
+    for(var i=1;i<shots.length;i++) if(shots[i].contain < gov.contain) gov = shots[i];
+    // a tall phone would otherwise sit too far back: lean in, but not so far
+    // that a subject leaves the frame
+    var lean = Math.min(1.45, Math.sqrt(gov.cover/gov.contain));
+    return Math.min(gov.contain * lean * 0.92, 9);
   }
   function buildTrack(){
     if(!subject || !subject.naturalWidth) return null;
-    var wide = {x:50, y:50, z:1};
     var c0=shot(CUTS[0]), c1=shot(CUTS[1]), c2=shot(CUTS[2]);
+    var Z = holdZoom([c0,c1,c2]);
     var k = [
-      {p:0.00, x:wide.x, y:wide.y, z:wide.z},
-      {p:0.37, x:wide.x, y:wide.y, z:wide.z},
-      {p:0.455, x:c0.x, y:c0.y, z:c0.z},          // cut 1
-      {p:0.500, x:c0.x, y:c0.y, z:c0.z},
-      swing(c0,c1,0.5275),
-      {p:0.555, x:c1.x, y:c1.y, z:c1.z},          // cut 2
-      {p:0.600, x:c1.x, y:c1.y, z:c1.z},
-      swing(c1,c2,0.6275),
-      {p:0.655, x:c2.x, y:c2.y, z:c2.z},          // cut 3
-      {p:0.700, x:c2.x, y:c2.y, z:c2.z},
-      {p:0.780, x:wide.x, y:wide.y, z:wide.z},    // back to the full poster
-      {p:1.00, x:wide.x, y:wide.y, z:wide.z}
+      {p:0.000, x:50, y:50, z:1},
+      {p:0.440, x:50, y:50, z:1},                 // hold on the whole toast
+      {p:0.505, x:c0.x, y:c0.y, z:Z},             // push in — left
+      {p:0.565, x:c0.x, y:c0.y, z:Z},
+      {p:0.630, x:c1.x, y:c1.y, z:Z},             // travel right, same distance
+      {p:0.690, x:c1.x, y:c1.y, z:Z},
+      {p:0.755, x:c2.x, y:c2.y, z:Z},             // travel back to the centre
+      {p:0.820, x:c2.x, y:c2.y, z:Z},
+      {p:0.880, x:50, y:50, z:1},                 // and only now, back to the poster
+      {p:1.000, x:50, y:50, z:1}
     ];
     trackW = innerWidth;
     return k;
@@ -322,20 +323,25 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var art=['assets/dia0.webp','assets/dia1.webp','assets/dia2.webp','assets/motif_6.webp'];
     var glyphs=['♪','♫','♬','♩'];
     var frag=document.createDocumentFragment();
-    for(var i=0;i<44;i++){
+    for(var i=0;i<150;i++){
       var el=document.createElement('b');
-      if(i%5===4){ el.textContent=glyphs[i%glyphs.length]; el.style.color = i%2 ? 'var(--green)' : 'var(--lime)'; }
+      if(i%6===5){ el.textContent=glyphs[i%glyphs.length]; el.style.color = i%2 ? 'var(--green)' : 'var(--lime)'; }
       else { var im=document.createElement('img'); im.src=art[i%4]; im.alt=''; el.appendChild(im); }
-      var size = 2.2 + rnd()*3.4;
-      el.style.width = 'clamp(16px,'+size.toFixed(2)+'vw,54px)';
-      if(i%5===4) el.style.fontSize = 'clamp(16px,'+size.toFixed(2)+'vw,54px)';
+      // a third of them fall close to the lens: bigger, faster, ahead of the rest
+      var near = (i%3===0);
+      var size = near ? 3.6+rnd()*3.6 : 1.6+rnd()*2.4;
+      var cap  = near ? 78 : 40;
+      el.style.width = 'clamp('+(near?22:12)+'px,'+size.toFixed(2)+'vw,'+cap+'px)';
+      if(i%6===5) el.style.fontSize = 'clamp('+(near?22:12)+'px,'+size.toFixed(2)+'vw,'+cap+'px)';
       frag.appendChild(el);
       PET.push({ el:el,
-        x0: rnd()*122-11, drift:(rnd()*2-1)*30,
-        sway: 3+rnd()*7, swayF: 1+rnd()*2, phase: rnd()*6.28,
-        r0: rnd()*360, spin:(rnd()*2-1)*420,
-        st: 0.085+rnd()*0.085, du: 0.09+rnd()*0.055,
-        sc: 0.55+rnd()*0.7 });
+        x0: rnd()*128-14, drift:(rnd()*2-1)*34,
+        sway: 3+rnd()*8, swayF: 0.8+rnd()*2.2, phase: rnd()*6.28,
+        r0: rnd()*360, spin:(rnd()*2-1)*400,
+        // a tight stagger so the screen fills at once, then thins out
+        st: 0.108+Math.pow(rnd(),1.7)*0.085,
+        du: (near?0.075:0.105)+rnd()*0.05,
+        sc: 0.6+rnd()*0.6 });
     }
     petals.appendChild(frag);
   })();
@@ -353,8 +359,17 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   }
   if(!reduce) addEventListener('scroll', kick, {passive:true});
 
+  var pending=[];
+  function reveals(){
+    for(var i=pending.length-1;i>=0;i--){
+      if(pending[i].getBoundingClientRect().top < innerHeight*0.84){
+        pending[i].classList.add('in'); pending.splice(i,1);
+      }
+    }
+  }
+
   var P=0;
-  var BEATS=[[0.00,'THE 20TH'],[0.13,'A BEER FOR 20 YEARS'],[0.30,'AND EVERYONE WHO CAME'],[0.78,'']];
+  var BEATS=[[0.00,'THE 20TH'],[0.145,'A BEER FOR 20 YEARS'],[0.330,'AND EVERYONE WHO CAME'],[0.880,'']];
   var lastBeat='';
 
   function frame(now){
@@ -368,8 +383,8 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     if(trackW !== innerWidth) track = null;         // viewport changed — reframe the cuts
     var cam = reduce ? null : camAt(P);
     if(cam && cam.z > 1.001){
-      var px = (50-cam.x) + Math.sin(t*0.40)*0.5;   // a touch of handheld drift
-      var py = (50-cam.y) + Math.cos(t*0.31)*0.4;
+      var px = (50-cam.x) + Math.sin(t*0.22)*0.45;  // a touch of handheld drift
+      var py = (50-cam.y) + Math.cos(t*0.17)*0.35;
       stage.style.transform = 'scale('+cam.z+') translate('+px+'%,'+py+'%)';
     } else if(stage.style.transform){
       stage.style.transform = '';
@@ -415,6 +430,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     if(label!==lastBeat){ beat.textContent=label; lastBeat=label; }
     beat.style.opacity = label ? 0.9 : 0;
     hint.style.opacity = clamp(1-P*9,0,1);
+    if(pending.length) reveals();
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
@@ -424,10 +440,9 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   fill(document.getElementById('t1'), items);
   fill(document.getElementById('t2'), items.slice().reverse());
 
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  },{threshold:0.18});
-  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  // reveals are checked by position rather than by observer, so a jump to the
+  // bottom of a page this tall can never leave a section stuck invisible
+  pending = [].slice.call(document.querySelectorAll('.reveal'));
 })();
 </script>
 </body>
