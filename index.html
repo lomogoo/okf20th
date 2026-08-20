@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SENDAI OKTOBERFEST 2026 ｜ 20th Anniversary — 20年分の「ありがとう」。</title>
+<meta name="description" content="仙台オクトーバーフェスト2026／20周年。2026年9月11日(金)–9月27日(日)、錦町公園にて開催。20年分の「ありがとう」。乾杯でつながる、笑顔の未来。">
+<meta name="theme-color" content="#17513c">
+<link rel="icon" type="image/webp" href="assets/emblem.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SENDAI OKTOBERFEST 2026">
+<meta property="og:title" content="SENDAI OKTOBERFEST 2026 ｜ 20th Anniversary">
+<meta property="og:description" content="2026年9月11日(金)–9月27日(日)、錦町公園。20年分の「ありがとう」。乾杯でつながる、笑顔の未来。">
+<meta property="og:image" content="assets/title.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17513c; --green:#3eb373; --lime:#cde080; --yellow:#e7e236;
+  --cyan:#35b8c8; --cream:#f8f6e4; --paper:#fffdf4;
+  --display:'Comfortaa',system-ui,sans-serif;
+  --body:'Zen Kaku Gothic New','Hiragino Sans','Noto Sans JP',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+
+/* ---------- HERO ---------- */
+.hero{height:380svh;position:relative}
+.hero__sticky{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
+.hero__sticky::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,#fff 0%,var(--cream) 68%,#eaf0d4 100%)}
+.stage{position:relative;height:min(92svh,132vw);aspect-ratio:1734/2448}
+.piece{position:absolute;will-change:transform,opacity;transform-origin:50% 50%}
+.piece.full{left:0;top:0;width:100%}
+
+.beat{
+  position:absolute;left:50%;translate:-50% 0;bottom:12svh;text-align:center;
+  font-family:var(--display);font-size:.66rem;letter-spacing:.34em;color:var(--green);
+  pointer-events:none;
+}
+.hint{position:absolute;bottom:5.5svh;left:50%;translate:-50% 0;font-family:var(--display);font-size:.66rem;letter-spacing:.34em;color:var(--green);display:flex;flex-direction:column;align-items:center;gap:.5em}
+.hint i{width:1px;height:32px;background:linear-gradient(var(--green),transparent);animation:drop 1.8s ease-in-out infinite}
+@keyframes drop{0%{transform:scaleY(.2);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(.2);transform-origin:bottom}}
+
+/* ---------- shared ---------- */
+.wrap{width:min(1080px,90vw);margin-inline:auto}
+.eyebrow{font-family:var(--display);font-size:.68rem;letter-spacing:.3em;color:var(--green);display:flex;align-items:center;gap:.9em;margin-bottom:1.6rem}
+.eyebrow::after{content:"";flex:1;height:1px;background:currentColor;opacity:.35}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- thanks ---------- */
+.thanks{padding:18svh 0 12svh;text-align:center}
+.thanks h2{font-size:clamp(1.55rem,4.4vw,3rem);font-weight:900;line-height:1.6;letter-spacing:.02em}
+.thanks h2 em{font-style:normal;color:var(--green)}
+.thanks p{margin-top:2.2rem;font-size:clamp(.9rem,1.8vw,1.02rem);line-height:2.15;opacity:.74}
+.count{
+  margin:0 auto 3.5rem;font-family:var(--display);font-weight:700;
+  font-size:clamp(5rem,20vw,13rem);line-height:.85;color:var(--lime);letter-spacing:-.04em;
+}
+.count span{display:block;font-family:var(--body);font-size:.09em;font-weight:700;letter-spacing:.42em;color:var(--green);margin-top:1.2rem}
+
+/* ---------- facts ---------- */
+.facts{padding:6svh 0 12svh}
+.dateline{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,8.4vw,6.4rem);line-height:1;letter-spacing:-.02em;color:var(--green);display:flex;align-items:baseline;gap:.1em;flex-wrap:wrap}
+.dateline i{font-style:normal;font-size:.3em;font-family:var(--body);font-weight:700;color:var(--ink)}
+.dateline b{font-weight:400;color:var(--lime)}
+.grid{margin-top:4rem;display:grid;gap:1px;background:rgba(23,81,60,.16);grid-template-columns:repeat(3,1fr);border:1px solid rgba(23,81,60,.16)}
+.cell{background:var(--paper);padding:1.7rem 1.5rem}
+.cell dt{font-family:var(--display);font-size:.62rem;letter-spacing:.24em;color:var(--green);margin-bottom:.85rem}
+.cell dd{font-size:1.05rem;font-weight:700;line-height:1.65}
+.cell dd small{display:block;font-size:.78rem;font-weight:400;opacity:.62;margin-top:.4rem;line-height:1.7}
+@media(max-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.grid{grid-template-columns:1fr}}
+
+/* ---------- ticker ---------- */
+.ticker{padding:7svh 0;background:var(--green);color:var(--cream);overflow:hidden}
+.ticker__row{display:flex;width:max-content;animation:slide 44s linear infinite}
+.ticker__row:nth-child(2){animation-duration:62s;animation-direction:reverse;opacity:.42}
+.ticker__row span{font-family:var(--display);font-weight:600;font-size:clamp(1.5rem,5vw,3.2rem);padding-inline:.55em;letter-spacing:.04em;white-space:nowrap}
+.ticker__row span::after{content:"◆";font-size:.42em;vertical-align:.5em;margin-left:.6em;color:var(--lime)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ---------- partners ---------- */
+.partners{padding:12svh 0}
+.partner-logo{width:min(260px,60vw);margin-top:2.5rem}
+.orgs{margin-top:3rem;font-size:.76rem;line-height:2.05;opacity:.66;max-width:60ch}
+
+footer{padding:7svh 0 9svh;border-top:1px solid rgba(23,81,60,.16);font-size:.72rem;line-height:2;opacity:.6}
+footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spacing:.16em;opacity:1;color:var(--green);margin-bottom:1.4rem}
+.proto{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--ink);color:var(--cream);font-size:.66rem;letter-spacing:.06em;padding:.55rem 1rem;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (prefers-reduced-motion:reduce){.ticker__row,.hint i{animation:none}.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero">
+  <div class="hero__sticky">
+    <div class="stage" id="stage">
+      <img class="piece full" data-role="mug"    src="assets/pattern.webp" alt="">
+      <img class="piece" data-role="mug"    style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
+      <img class="piece" data-role="title"  style="left:17.128%;top:60.784%;width:70.588%" src="assets/title.webp" alt="SENDAI OKTOBERFEST 20TH">
+      <img class="piece" data-role="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
+      <img class="piece" data-role="final"  style="left:19.550%;top:21.732%;width:67.243%" src="assets/date.webp" alt="2026年9月11日金曜から9月27日日曜">
+      <img class="piece" data-role="final"  style="left:3.518%;top:34.518%;width:65.110%" src="assets/extras.webp" alt="">
+      <img class="piece" data-role="final"  style="left:3.172%;top:2.165%;width:65.167%" src="assets/deco.webp" alt="">
+      <img class="piece" data-role="motif" style="left:39.100%;top:10.458%;width:5.017%" src="assets/motif_0.webp" alt="">
+      <img class="piece" data-role="motif" style="left:18.397%;top:12.418%;width:6.747%" src="assets/motif_1.webp" alt="">
+      <img class="piece" data-role="motif" style="left:83.679%;top:54.289%;width:6.517%" src="assets/motif_2.webp" alt="">
+      <img class="piece" data-role="motif" style="left:77.970%;top:55.392%;width:3.518%" src="assets/motif_3.webp" alt="">
+      <img class="piece" data-role="motif" style="left:84.660%;top:63.725%;width:2.826%" src="assets/motif_4.webp" alt="">
+      <img class="piece" data-role="motif" style="left:89.043%;top:70.425%;width:3.633%" src="assets/motif_5.webp" alt="">
+      <img class="piece" data-role="motif" style="left:89.043%;top:76.593%;width:5.536%" src="assets/motif_6.webp" alt="">
+      <img class="piece" data-role="motif" style="left:3.230%;top:84.191%;width:5.363%" src="assets/motif_7.webp" alt="">
+      <img class="piece" data-role="dia" style="left:63.495%;top:0.245%;width:5.133%" src="assets/dia0.webp" alt="">
+      <img class="piece" data-role="dia" style="left:91.753%;top:1.675%;width:5.536%" src="assets/dia1.webp" alt="">
+      <img class="piece" data-role="dia" style="left:16.667%;top:1.797%;width:5.017%" src="assets/dia2.webp" alt="">
+      <img class="piece" data-role="dia" style="left:1.442%;top:9.355%;width:4.671%" src="assets/dia0.webp" alt="">
+      <img class="piece" data-role="dia" style="left:81.603%;top:10.131%;width:6.228%" src="assets/dia1.webp" alt="">
+      <img class="piece" data-role="dia" style="left:91.061%;top:18.505%;width:4.671%" src="assets/dia2.webp" alt="">
+      <img class="piece" data-role="dia" style="left:5.363%;top:56.087%;width:4.902%" src="assets/dia0.webp" alt="">
+      <img class="piece" data-role="dia" style="left:91.407%;top:61.724%;width:6.344%" src="assets/dia1.webp" alt="">
+      <img class="piece" data-role="dia" style="left:6.805%;top:64.992%;width:4.614%" src="assets/dia2.webp" alt="">
+      <img class="piece" data-role="dia" style="left:2.595%;top:75.776%;width:5.248%" src="assets/dia0.webp" alt="">
+      <img class="piece" data-role="dia" style="left:82.641%;top:78.064%;width:3.633%" src="assets/dia1.webp" alt="">
+      <img class="piece" data-role="emblem" style="left:5.133%;top:2.328%;width:10.323%" src="assets/emblem.webp" alt="20th Anniversary">
+      <img class="piece" data-role="copy"   style="left:59.573%;top:5.310%;width:37.313%" src="assets/catchcopy.webp" alt="20年分の「ありがとう」。乾杯でつながる、笑顔の未来。">
+      <img class="piece" data-role="info"   style="left:3.287%;top:84.150%;width:94.752%" src="assets/infotext.webp" alt="">
+      <img class="piece" data-role="sponsor" style="left:3.460%;top:91.258%;width:92.676%" src="assets/sponsors.webp" alt="">
+    </div>
+    <p class="beat" id="beat"></p>
+    <div class="hint" id="hint"><i></i>SCROLL</div>
+  </div>
+</section>
+
+<section class="thanks">
+  <div class="wrap reveal">
+    <p class="count">20<span>YEARS</span></p>
+    <h2>20年分の「ありがとう」。<br><em>乾杯でつながる、笑顔の未来。</em></h2>
+    <p>同じ公園で、同じ乾杯を、20回。<br>
+       続けてこられたのは、毎年ここに集まってくださったみなさんのおかげです。<br>
+       20回目の秋も、変わらずお待ちしています。</p>
+  </div>
+</section>
+
+<section class="facts">
+  <div class="wrap reveal">
+    <p class="eyebrow">SCHEDULE &amp; VENUE</p>
+    <p class="dateline">2026<b>.</b>9<b>/</b>11<i>金</i><b>–</b>9<b>/</b>27<i>日</i></p>
+    <dl class="grid">
+      <div class="cell"><dt>WEEKDAY</dt><dd>16:00 – 21:00</dd></div>
+      <div class="cell"><dt>HOLIDAY</dt><dd>11:00 – 21:00</dd></div>
+      <div class="cell"><dt>ADMISSION</dt><dd>500円<small>税込</small></dd></div>
+      <div class="cell"><dt>VENUE</dt><dd>錦町公園<small>仙台市青葉区</small></dd></div>
+      <div class="cell"><dt>RAIN OR SHINE</dt><dd>雨天決行<small>大型テントを設置しています</small></dd></div>
+      <div class="cell"><dt>FOR EVERYONE</dt><dd>飲まない人も大歓迎<small>お子さま連れでも楽しめます</small></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="ticker" aria-label="出店ラインナップ">
+  <div class="ticker__row" id="t1"></div>
+  <div class="ticker__row" id="t2"></div>
+</section>
+
+<section class="partners">
+  <div class="wrap reveal">
+    <p class="eyebrow">SPECIAL PARTNER &amp; ORGANIZERS</p>
+    <img class="partner-logo" src="assets/partner.webp" alt="SPECIAL PARTNER 株式会社高速">
+    <p class="orgs">宮城県／仙台市／在日ドイツ商工会議所／バイエルン州駐日代表部／ドイツ観光局／（公財）宮城県国際化協会／（公財）仙台観光国際協会／仙台商工会議所／宮城EU協会／（公社）仙台青年会議所／河北新報社／tbc東北放送／仙台放送／ミヤギテレビ／khb東日本放送／Date fm／RADIO3／仙台リビング新聞社／machico／S-style／Kappo</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <strong>SENDAI OKTOBERFEST 2026</strong>
+    ※荒天等のやむを得ない事情により、イベントの一部日程または全日程を中止とする場合がございます。その場合は、公式ホームページ、公式SNS等で情報発信させていただきます。<br>
+    ※ステージ内容等、一部変更になる場合があります。<br>
+    お問合せ先：仙台オクトーバーフェスト公式ホームページ
+  </div>
+</footer>
+
+<div class="proto">PROTOTYPE — ポスター入稿データ（.ai）から自動生成</div>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero = document.getElementById('hero'),
+      hint = document.getElementById('hint'),
+      beat = document.getElementById('beat');
+  var pieces = [].slice.call(document.querySelectorAll('.piece'));
+  var AR = 1734/2448;                       // stage width / height
+  var TITLE_SC = innerWidth < 720 ? 1.22 : 2.05;   // narrow screens can't hold the big title
+
+  var motifs = pieces.filter(function(p){return p.dataset.role==='motif';});
+  var dias   = pieces.filter(function(p){return p.dataset.role==='dia';});
+
+  pieces.forEach(function(p){
+    var role = p.dataset.role, cx = parseFloat(p.style.left||0)+3, s;
+    if(role==='title')       s={from:0.00,to:0.24,sc:TITLE_SC,center:true,fade:false};
+    else if(role==='mug')    s={from:0.15,to:0.44,sc:1.06,dx:0,dy:14};
+    else if(role==='people') s={from:0.40,to:0.68,sc:0.97,dx:0,dy:13};
+    else if(role==='final')  s={from:0.62,to:0.80,sc:1,dx:0,dy:4};
+    else if(role==='motif'){
+      var k=motifs.indexOf(p), dir=cx<50?-1:1;
+      s={from:0.66+k*0.013,to:0.88+k*0.013,sc:0.55,dx:dir*38,dy:(k%2?18:-22),rot:dir*150};
+    }
+    else if(role==='dia'){
+      var j=dias.indexOf(p);
+      s={from:0.68+j*0.010,to:0.91+j*0.010,sc:0.7,dx:(j%3-1)*8,dy:-46-(j%4)*10,rot:(j%2?1:-1)*180};
+    }
+    else if(role==='emblem')  s={from:0.72,to:0.89,sc:0.2,dx:0,dy:0,rot:-200};
+    else if(role==='copy')    s={from:0.77,to:0.92,sc:1,dx:9,dy:0};
+    else if(role==='info')    s={from:0.83,to:0.96,sc:1,dx:0,dy:5};
+    else if(role==='sponsor') s={from:0.88,to:1.00,sc:1,dx:0,dy:4};
+    s.dx=s.dx||0; s.dy=s.dy||0; s.rot=s.rot||0;
+    p._s=s;
+  });
+
+  // title starts large and centred on the stage — needs its natural aspect
+  function centre(p){
+    if(p._c || !p.naturalWidth) return p._c;
+    var L=parseFloat(p.style.left)||0, T=parseFloat(p.style.top)||0, W=parseFloat(p.style.width)||100;
+    var H = W * (p.naturalHeight/p.naturalWidth) * AR;       // height as % of stage height
+    p._c = { tx:(50-(L+W/2))/W*100, ty:(50-(T+H/2))/H*100 };
+    return p._c;
+  }
+
+  function ease(t){ return 1-Math.pow(1-t,3); }
+  function clamp(v,a,b){ return v<a?a:v>b?b:v; }
+
+  var P=0;
+  var BEATS=[[0.00,'THE 20TH'],[0.18,'A BEER FOR 20 YEARS'],[0.44,'AND EVERYONE WHO CAME'],[0.72,'']];
+  var lastBeat='';
+
+  function frame(now){
+    var r=hero.getBoundingClientRect();
+    P = reduce ? 1 : clamp(-r.top/(hero.offsetHeight-innerHeight),0,1);
+    var t=now/1000;
+
+    for(var i=0;i<pieces.length;i++){
+      var p=pieces[i], s=p._s;
+      var lp=ease(clamp((P-s.from)/(s.to-s.from),0,1)), inv=1-lp;
+      var dx=s.dx, dy=s.dy;
+      if(s.center){ var c=centre(p); if(c){ dx=c.tx; dy=c.ty; } }
+      var amb=0, ambR=0;
+      if(!reduce && lp>0.98){
+        if(p.dataset.role==='motif'){ amb=Math.sin(t*0.8+i)*0.9; ambR=Math.sin(t*0.5+i)*2.5; }
+        if(p.dataset.role==='dia'){ amb=Math.sin(t*0.6+i*1.7)*1.2; ambR=Math.sin(t*0.4+i)*4; }
+      }
+      p.style.opacity = (s.fade===false) ? 1 : clamp(lp*1.3,0,1);
+      p.style.transform = 'translate('+(dx*inv)+'%,'+(dy*inv+amb)+'%) rotate('+(s.rot*inv+ambR)+'deg) scale('+(s.sc+(1-s.sc)*lp)+')';
+    }
+
+    var label='';
+    for(var b=0;b<BEATS.length;b++){ if(P>=BEATS[b][0]) label=BEATS[b][1]; }
+    if(label!==lastBeat){ beat.textContent=label; lastBeat=label; }
+    beat.style.opacity = label ? 0.9 : 0;
+    hint.style.opacity = clamp(1-P*9,0,1);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  var items=['GERMAN BEER','TOHOKU BEER','WINE','SAKE','BEEF','SAUSAGE','FRIT','OYSTERS','COFFEE','BREZEL','SWEETS','AND MUSIC'];
+  function fill(el,list){ el.innerHTML = list.concat(list).map(function(x){return '<span>'+x+'</span>';}).join(''); }
+  fill(document.getElementById('t1'), items);
+  fill(document.getElementById('t2'), items.slice().reverse());
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.18});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
