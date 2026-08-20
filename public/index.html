@@ -67,6 +67,56 @@ img{display:block;max-width:100%}
 }
 .count span{display:block;font-family:var(--body);font-size:.09em;font-weight:700;letter-spacing:.42em;color:var(--green);margin-top:1.2rem}
 
+/* ---------- danke ---------- */
+.danke{position:relative;padding:20svh 0 18svh;text-align:center;overflow:hidden}
+.danke__deco{position:absolute;inset:0;pointer-events:none}
+.danke__deco img{position:absolute;width:100%;opacity:.55;animation:dankeFloat 13s ease-in-out infinite}
+.danke__word{
+  font-family:var(--display);font-weight:700;line-height:.92;letter-spacing:-.015em;
+  font-size:clamp(3.4rem,18vw,14rem);display:flex;justify-content:center;
+}
+.danke__word span{
+  display:inline-block;position:relative;color:transparent;
+  -webkit-text-stroke:.045em var(--green);
+  opacity:0;transform:translateY(.5em) rotate(-8deg) scale(.82);
+}
+/* the lime block sits behind the outline, the way the poster stacks its type */
+.danke__word span::before{
+  content:attr(data-c);position:absolute;left:.05em;top:.055em;z-index:-1;
+  color:var(--lime);-webkit-text-stroke:0;
+}
+.danke.in .danke__word span{animation:dankePop .95s cubic-bezier(.2,1.5,.36,1) forwards,dankeBob 3.8s ease-in-out infinite}
+.danke.in .danke__word span:nth-child(1){animation-delay:0s,1.0s}
+.danke.in .danke__word span:nth-child(2){animation-delay:.09s,1.4s}
+.danke.in .danke__word span:nth-child(3){animation-delay:.18s,1.1s}
+.danke.in .danke__word span:nth-child(4){animation-delay:.27s,1.6s}
+.danke.in .danke__word span:nth-child(5){animation-delay:.36s,1.2s}
+.danke.in .danke__word span:nth-child(6){animation-delay:.48s,.9s}
+@keyframes dankePop{
+  0%{opacity:0;transform:translateY(.5em) rotate(-8deg) scale(.82)}
+  55%{opacity:1}
+  100%{opacity:1;transform:none}
+}
+@keyframes dankeBob{
+  0%,100%{translate:0 0;rotate:0deg}
+  50%{translate:0 -.055em;rotate:1.4deg}
+}
+@keyframes dankeFloat{
+  0%,100%{transform:translate(0,0) rotate(0)}
+  50%{transform:translate(0,-1.6rem) rotate(14deg)}
+}
+.danke__sub{
+  margin-top:2.6rem;font-size:clamp(.9rem,1.9vw,1.05rem);line-height:2.1;opacity:0;
+  transition:opacity 1.4s ease 1.1s,transform 1.4s cubic-bezier(.16,.8,.3,1) 1.1s;
+  transform:translateY(20px);
+}
+.danke.in .danke__sub{opacity:.78;transform:none}
+.danke__rule{
+  width:min(1080px,90vw);margin:0 auto 3.2rem;height:1px;background:rgba(23,81,60,.16);
+  transform:scaleX(0);transform-origin:50% 50%;transition:transform 1.6s cubic-bezier(.16,.8,.3,1)
+}
+.danke.in .danke__rule{transform:none}
+
 /* ---------- facts ---------- */
 .facts{padding:6svh 0 12svh}
 .dateline{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,8.4vw,6.4rem);line-height:1;letter-spacing:-.02em;color:var(--green);display:flex;align-items:baseline;gap:.1em;flex-wrap:wrap}
@@ -95,7 +145,8 @@ img{display:block;max-width:100%}
 
 footer{padding:7svh 0 9svh;border-top:1px solid rgba(23,81,60,.16);font-size:.72rem;line-height:2;opacity:.6}
 footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spacing:.16em;opacity:1;color:var(--green);margin-bottom:1.4rem}
-@media (prefers-reduced-motion:reduce){.ticker__row,.hint i{animation:none}.reveal{opacity:1;transform:none;transition:none}}
+@media (prefers-reduced-motion:reduce){.ticker__row,.hint i,.danke__deco img{animation:none}.reveal{opacity:1;transform:none;transition:none}
+  .danke__word span{opacity:1;transform:none;animation:none}.danke__sub{opacity:.78;transform:none;transition:none}.danke__rule{transform:none;transition:none}}
 </style>
 </head>
 <body>
@@ -103,10 +154,10 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 <section class="hero" id="hero">
   <div class="hero__sticky">
     <div class="stage" id="stage">
-      <img class="piece full" data-role="mug"    data-shake="mug" src="assets/pattern.webp" alt="">
-      <img class="piece" data-role="mug"    data-shake="mug" style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
+      <img class="piece full" data-role="mug"    src="assets/pattern.webp" alt="">
+      <img class="piece" data-role="mug"    style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
       <img class="piece" data-role="title"  style="left:17.128%;top:60.784%;width:70.588%" src="assets/title.webp" alt="SENDAI OKTOBERFEST 20TH">
-      <img class="piece" data-role="people" data-shake="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
+      <img class="piece" data-role="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
       <img class="piece" data-role="final"  style="left:19.550%;top:21.732%;width:67.243%" src="assets/date.webp" alt="2026年9月11日金曜から9月27日日曜">
       <img class="piece" data-role="final"  style="left:3.518%;top:34.518%;width:65.110%" src="assets/extras.webp" alt="">
       <img class="piece" data-role="final"  style="left:3.172%;top:2.165%;width:65.167%" src="assets/deco.webp" alt="">
@@ -148,6 +199,23 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
        続けてこられたのは、毎年ここに集まってくださったみなさんのおかげです。<br>
        20回目の秋も、変わらずお待ちしています。</p>
   </div>
+</section>
+
+<section class="danke" id="danke" aria-label="DANKE">
+  <div class="danke__deco" aria-hidden="true">
+    <img src="assets/dia1.webp" alt="" style="left:7%;top:14%;max-width:52px;animation-duration:11s">
+    <img src="assets/dia0.webp" alt="" style="left:17%;top:64%;max-width:38px;animation-duration:15s;animation-delay:-4s">
+    <img src="assets/motif_6.webp" alt="" style="left:29%;top:8%;max-width:44px;animation-duration:17s;animation-delay:-9s">
+    <img src="assets/dia2.webp" alt="" style="right:9%;top:20%;max-width:56px;animation-duration:12s;animation-delay:-2s">
+    <img src="assets/dia1.webp" alt="" style="right:21%;top:70%;max-width:40px;animation-duration:16s;animation-delay:-7s">
+    <img src="assets/motif_6.webp" alt="" style="right:33%;top:6%;max-width:34px;animation-duration:14s;animation-delay:-5s">
+    <img src="assets/dia0.webp" alt="" style="left:45%;top:80%;max-width:32px;animation-duration:18s;animation-delay:-11s">
+  </div>
+  <div class="danke__rule"></div>
+  <p class="danke__word" aria-label="DANKE!">
+    <span data-c="D" aria-hidden="true">D</span><span data-c="A" aria-hidden="true">A</span><span data-c="N" aria-hidden="true">N</span><span data-c="K" aria-hidden="true">K</span><span data-c="E" aria-hidden="true">E</span><span data-c="!" aria-hidden="true">!</span>
+  </p>
+  <p class="danke__sub">20年、ありがとうございました。<br>ドイツの言葉で、いちばん伝えたいこと。</p>
 </section>
 
 <section class="facts">
@@ -207,7 +275,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var role = p.dataset.role, cx = parseFloat(p.style.left||0)+3, s;
     if(role==='title')       s={from:0.00,to:0.085,sc:TITLE_SC,center:true,fade:false};
     else if(role==='mug')    s={from:0.145,to:0.260,sc:1.06,dx:0,dy:14};
-    else if(role==='people') s={from:0.285,to:0.390,sc:0.94,dx:0,dy:10};
+    else if(role==='people') s={from:0.285,to:0.385,sc:0.94,dx:0,dy:10};
     else if(role==='final')  s={from:0.865,to:0.910,sc:1,dx:0,dy:4};
     else if(role==='motif'){
       var k=motifs.indexOf(p), dir=cx<50?-1:1;
@@ -284,12 +352,12 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var Z = holdZoom([c0,c1,c2]);
     var k = [
       {p:0.000, x:50, y:50, z:1},
-      {p:0.440, x:50, y:50, z:1},                 // hold on the whole toast
-      {p:0.505, x:c0.x, y:c0.y, z:Z},             // push in — left
-      {p:0.565, x:c0.x, y:c0.y, z:Z},
-      {p:0.630, x:c1.x, y:c1.y, z:Z},             // travel right, same distance
-      {p:0.690, x:c1.x, y:c1.y, z:Z},
-      {p:0.755, x:c2.x, y:c2.y, z:Z},             // travel back to the centre
+      {p:0.380, x:50, y:50, z:1},                 // the toast lands and the lens is already moving
+      {p:0.455, x:c0.x, y:c0.y, z:Z},             // push in — left
+      {p:0.530, x:c0.x, y:c0.y, z:Z},
+      {p:0.600, x:c1.x, y:c1.y, z:Z},             // travel right, same distance
+      {p:0.675, x:c1.x, y:c1.y, z:Z},
+      {p:0.745, x:c2.x, y:c2.y, z:Z},             // travel back to the centre
       {p:0.820, x:c2.x, y:c2.y, z:Z},
       {p:0.880, x:50, y:50, z:1},                 // and only now, back to the poster
       {p:1.000, x:50, y:50, z:1}
@@ -338,26 +406,18 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
         x0: rnd()*128-14, drift:(rnd()*2-1)*34,
         sway: 3+rnd()*8, swayF: 0.8+rnd()*2.2, phase: rnd()*6.28,
         r0: rnd()*360, spin:(rnd()*2-1)*400,
-        // a tight stagger so the screen fills at once, then thins out
-        st: 0.108+Math.pow(rnd(),1.7)*0.085,
+        // they start with the very first turn of the wheel, and the tight
+        // stagger fills the screen at once before thinning out
+        st: 0.016+Math.pow(rnd(),1.6)*0.070,
         du: (near?0.075:0.105)+rnd()*0.05,
-        sc: 0.6+rnd()*0.6 });
+        sc: 0.6+rnd()*0.6,
+        // half of them come back to drift over the finished poster
+        drifts: (i%2===0), fdur: 17+rnd()*17, foff: rnd() });
     }
     petals.appendChild(frag);
   })();
 
-  /* ---------- vibration ----------
-     Once the poster is complete, scrolling gives the mug and the people a
-     slow, generous wobble — a pop bounce rather than a buzz.                 */
-  var shake = 0, lastNow = 0, lastKick = 0;
-  function kick(){
-    if(reduce || P < 0.95) return;
-    var n = performance.now();
-    if(n - lastKick < 260) return;          // one bounce per gesture, not per event
-    lastKick = n;
-    shake = Math.min(1, shake + 0.75);
-  }
-  if(!reduce) addEventListener('scroll', kick, {passive:true});
+  var lastNow = 0;
 
   var pending=[];
   function reveals(){
@@ -368,7 +428,25 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     }
   }
 
-  var P=0;
+  var P=0, S=0, started=false;
+  var LAG = 0.40,       // seconds for the animation to settle onto the scroll
+      CAM_SPEED = 0.20,  // while the lens is moving, this is as fast as it goes
+      REST_SPEED = 0.85; // elsewhere it may catch up to the scroll quickly
+
+  // The poster follows the scroll, but the camera moves keep their own pace:
+  // flick the wheel as hard as you like and the push-in, the travel across and
+  // the pull back still play at an even speed.
+  function settle(dt){
+    if(reduce){ S = P; return; }
+    if(!started){ S = P; started = true; return; }
+    var d = P - S;
+    if(Math.abs(d) < 0.0002){ S = P; return; }
+    var step = d * (1 - Math.exp(-dt/LAG));
+    var lens = (S > 0.340 && S < 0.905) || (P > 0.340 && P < 0.905);
+    var cap  = (lens ? CAM_SPEED : REST_SPEED) * dt;
+    S += clamp(step, -cap, cap);
+  }
+
   var BEATS=[[0.00,'THE 20TH'],[0.145,'A BEER FOR 20 YEARS'],[0.330,'AND EVERYONE WHO CAME'],[0.880,'']];
   var lastBeat='';
 
@@ -378,10 +456,10 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var t=now/1000;
     var dt = lastNow ? Math.min(0.05,(now-lastNow)/1000) : 0;
     lastNow = now;
-    shake *= Math.exp(-dt*1.5);
+    settle(dt);
 
     if(trackW !== innerWidth) track = null;         // viewport changed — reframe the cuts
-    var cam = reduce ? null : camAt(P);
+    var cam = reduce ? null : camAt(S);
     if(cam && cam.z > 1.001){
       var px = (50-cam.x) + Math.sin(t*0.22)*0.45;  // a touch of handheld drift
       var py = (50-cam.y) + Math.cos(t*0.17)*0.35;
@@ -392,44 +470,46 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
     for(var i=0;i<pieces.length;i++){
       var p=pieces[i], s=p._s;
-      var lp=ease(clamp((P-s.from)/(s.to-s.from),0,1)), inv=1-lp;
+      var lp=ease(clamp((S-s.from)/(s.to-s.from),0,1)), inv=1-lp;
       var dx=s.dx, dy=s.dy;
       if(s.center){ var c=centre(p); if(c){ dx=c.tx; dy=c.ty; } }
-      var amb=0, ambR=0, ambX=0, bounce=1;
+      var amb=0, ambR=0;
       if(!reduce && lp>0.98){
         if(p.dataset.role==='motif'){ amb=Math.sin(t*0.8+i)*0.9; ambR=Math.sin(t*0.5+i)*2.5; }
         if(p.dataset.role==='dia'){ amb=Math.sin(t*0.6+i*1.7)*1.2; ambR=Math.sin(t*0.4+i)*4; }
       }
-      if(shake>0.004 && p.dataset.shake){
-        var ph = p.dataset.shake==='mug' ? 0 : 1.7;
-        ambX  += Math.sin(t*15+ph*1.2)*2.4*shake;
-        amb   += Math.sin(t*17+ph)*2.8*shake;
-        ambR  += Math.sin(t*16+ph*0.6)*3.4*shake;
-        bounce = 1 + Math.sin(t*15+ph)*0.045*shake;
-      }
       var op = (s.fade===false) ? 1 : clamp(lp*1.3,0,1);
-      var tr = 'translate('+(dx*inv+ambX)+'%,'+(dy*inv+amb)+'%) rotate('+(s.rot*inv+ambR)+'deg) scale('+((s.sc+(1-s.sc)*lp)*bounce)+')';
+      var tr = 'translate('+(dx*inv)+'%,'+(dy*inv+amb)+'%) rotate('+(s.rot*inv+ambR)+'deg) scale('+(s.sc+(1-s.sc)*lp)+')';
       if(p._op!==op){ p.style.opacity = op; p._op=op; }
       if(p._tr!==tr){ p.style.transform = tr; p._tr=tr; }
     }
 
+    // once the poster is whole, the same shapes come back and simply hang in
+    // the air over it, drifting on their own clock rather than on the scroll
+    var adrift = reduce ? 0 : clamp((S-0.925)/0.045,0,1);
     for(var q=0;q<PET.length;q++){
-      var d=PET[q], lq=(P-d.st)/d.du, o=0, ptr='';
+      var d=PET[q], lq=(S-d.st)/d.du, o=0, ptr='', x, y;
       if(!reduce && lq>0 && lq<1){
         o = Math.pow(Math.sin(Math.PI*lq), 0.6);
-        var x = d.x0 + d.drift*lq + Math.sin(lq*6.283*d.swayF + d.phase + t*0.6)*d.sway;
-        var y = -25 + 150*lq;
+        x = d.x0 + d.drift*lq + Math.sin(lq*6.283*d.swayF + d.phase + t*0.6)*d.sway;
+        y = -25 + 150*lq;
         ptr = 'translate('+(x/100*innerWidth)+'px,'+(y/100*innerHeight)+'px) rotate('+(d.r0+d.spin*lq+Math.sin(t*1.1+q)*10)+'deg) scale('+d.sc+')';
+      } else if(adrift > 0.01 && d.drifts){
+        var lf = (t/d.fdur + d.foff) % 1;
+        o = Math.pow(Math.sin(Math.PI*lf), 0.7) * adrift * 0.8;
+        x = d.x0 + Math.sin(lf*6.283*d.swayF + d.phase)*d.sway*1.6;
+        y = -22 + 146*lf;
+        ptr = 'translate('+(x/100*innerWidth)+'px,'+(y/100*innerHeight)+'px) rotate('+(d.r0+d.spin*lf*0.3+Math.sin(t*0.45+q)*9)+'deg) scale('+(d.sc*0.9)+')';
       }
       if(d._o!==o){ d.el.style.opacity=o; d._o=o; }
       if(o && d._t!==ptr){ d.el.style.transform=ptr; d._t=ptr; }
     }
 
     var label='';
-    for(var b=0;b<BEATS.length;b++){ if(P>=BEATS[b][0]) label=BEATS[b][1]; }
+    for(var b=0;b<BEATS.length;b++){ if(S>=BEATS[b][0]) label=BEATS[b][1]; }
     if(label!==lastBeat){ beat.textContent=label; lastBeat=label; }
     beat.style.opacity = label ? 0.9 : 0;
-    hint.style.opacity = clamp(1-P*9,0,1);
+    hint.style.opacity = clamp(1-S*9,0,1);
     if(pending.length) reveals();
     requestAnimationFrame(frame);
   }
@@ -442,7 +522,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
   // reveals are checked by position rather than by observer, so a jump to the
   // bottom of a page this tall can never leave a section stuck invisible
-  pending = [].slice.call(document.querySelectorAll('.reveal'));
+  pending = [].slice.call(document.querySelectorAll('.reveal,.danke'));
 })();
 </script>
 </body>
