@@ -59,13 +59,17 @@ img{display:block;max-width:100%}
 
 /* L5 — twenty marks, and the count they add up to */
 .years{position:absolute;inset:0;z-index:5;pointer-events:none;display:grid;place-items:center}
-.years b{position:absolute;left:50%;top:50%;width:clamp(15px,2.1vmin,26px);opacity:0;will-change:transform,opacity}
+.years b{position:absolute;left:50%;top:50%;width:clamp(21px,3.1vmin,38px);opacity:0;will-change:transform,opacity}
 .years b img{width:100%;height:auto;display:block}
+.years__halo{position:absolute;left:50%;top:50%;width:clamp(260px,46vmin,540px);aspect-ratio:1;opacity:0;
+  translate:-50% -50%;pointer-events:none;will-change:transform,opacity;
+  background:radial-gradient(closest-side,rgba(255,253,244,.98) 0%,rgba(255,253,244,.92) 46%,rgba(255,253,244,0) 74%)}
 .years__seal{position:absolute;left:50%;top:50%;width:clamp(150px,27vmin,320px);opacity:0;will-change:transform,opacity}
 .years__count{
   position:relative;text-align:center;font-family:var(--display);font-weight:700;opacity:0;
   font-size:clamp(4.5rem,17vmin,11rem);line-height:.9;color:transparent;
   -webkit-text-stroke:.035em var(--green);will-change:transform,opacity;
+  text-shadow:0 0 18px rgba(255,253,244,.95),0 0 7px rgba(255,253,244,1);
 }
 .years__count::before{content:attr(data-n);position:absolute;left:.045em;top:.05em;z-index:-1;color:var(--lime);-webkit-text-stroke:0}
 .years__label{display:block;font-size:.13em;letter-spacing:.5em;color:var(--green);-webkit-text-stroke:0;margin-top:1.1em}
@@ -251,6 +255,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
     <div class="years" id="years" aria-hidden="true">
       <p class="years__count" id="count" data-n="1">1<span class="years__label">YEARS</span></p>
+      <span class="years__halo" id="halo"></span>
       <img class="years__seal" id="seal" src="assets/emblem_green.webp" alt="">
     </div>
     <div class="drift drift--near" id="driftNear" aria-hidden="true"></div>
@@ -370,6 +375,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       count = document.getElementById('count'),
       years = document.getElementById('years'),
       seal  = document.getElementById('seal'),
+      halo  = document.getElementById('halo'),
       beat  = document.getElementById('beat'),
       hint  = document.getElementById('hint');
   var AR = 1734/2448;                       // stage width / height
@@ -394,9 +400,9 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
        .86 the poster               — everything lands in its printed place        */
 
   var ACT = {
-    pourB:[0.075,0.235], foam:[0.225,0.300],
-    twenty:[0.575,0.735], recede:[0.555,0.615], seal:[0.696,0.788],
-    clear:[0.800,0.865]
+    pourB:[0.055,0.400],           // one twentieth of the glass per year
+    foam:[0.395,0.470],
+    seal:[0.395,0.480], clear:[0.500,0.570]
   };
 
   var pieces = [].slice.call(document.querySelectorAll('.piece'));
@@ -405,18 +411,18 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
   pieces.forEach(function(p){
     var role=p.dataset.role, cx=parseFloat(p.style.left||0)+3, s;
-    if(role==='glass')       s={from:0.000,to:0.085,sc:1.09,dy:3};
-    else if(role==='beer')   s={from:0.000,to:0.085,sc:1.09,dy:3,fade:false};
-    else if(role==='rim')    s={from:0.000,to:0.090,sc:1.09,dy:3};
-    else if(role==='title')  s={from:0.170,to:0.290,sc:0.94,dy:7};
-    else if(role==='notes')  s={from:0.240,to:0.330,sc:0.96,dy:5};
-    else if(role==='people') s={from:0.300,to:0.415,sc:0.95,dy:11};
+    if(role==='glass')       s={from:0.000,to:0.055,sc:1.09,dy:3};
+    else if(role==='beer')   s={from:0.000,to:0.055,sc:1.09,dy:3,fade:false};
+    else if(role==='rim')    s={from:0.000,to:0.060,sc:1.09,dy:3};
+    else if(role==='notes')  s={from:0.450,to:0.545,sc:0.96,dy:5};
+    else if(role==='people') s={from:0.468,to:0.585,sc:0.95,dy:11};
     else if(role==='motif'){
       var k=motifs.indexOf(p), dir=cx<50?-1:1;
-      s={from:0.330+k*0.011,to:0.450+k*0.011,sc:0.5,dx:dir*40,dy:(k%2?22:-26),rot:dir*160};
+      s={from:0.490+k*0.010,to:0.600+k*0.010,sc:0.5,dx:dir*40,dy:(k%2?22:-26),rot:dir*160};
     }
+    else if(role==='copy')   s={from:0.775,to:0.850,sc:1,dx:7};
+    else if(role==='title')  s={from:0.842,to:0.905,sc:0.94,dy:7};
     else if(role==='emblem') s={from:0.858,to:0.925,sc:0.25,rot:-200};
-    else if(role==='copy')   s={from:0.845,to:0.915,sc:1,dx:7};
     else if(role==='dia'){
       var j=dias.indexOf(p);
       s={from:0.862+j*0.005,to:0.925+j*0.005,sc:0.7,dx:(j%3-1)*9,dy:-44-(j%4)*10,rot:(j%2?1:-1)*180};
@@ -441,7 +447,9 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
      beer.webp is clipped from the top down, so the level climbs inside the
      glass the outline has already drawn.                                    */
   var BEER = { top:0.194, bottom:0.785 };     // where the beer sits in the stage box
-  function level(v){ return out(span(v, ACT.pourB[0], ACT.pourB[1])); }
+  // the glass rises a twentieth at a time, so the level and the count are the
+  // same number seen two ways
+  function poured(v){ return span(v, ACT.pourB[0], ACT.pourB[1]) * 20; }
 
   /* ---------- bubbles ---------- */
   var BUB=[];
@@ -512,7 +520,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
           sway: 3+rnd()*8, swayF: 0.8+rnd()*2.2, ph: rnd()*TAU,
           r0: rnd()*360, spin:(rnd()*2-1)*380,
           st: 0.014+Math.pow(rnd(),1.6)*0.062,
-          du: (near?0.075:0.110)+rnd()*0.05,
+          du: (near?0.048:0.062)+rnd()*0.030,
           sc: 0.6+rnd()*0.6,
           fdur: 15+rnd()*19, foff: rnd() });
       }
@@ -542,12 +550,12 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     trackW=innerWidth;
     return [
       {p:0.000, x:50, y:50, z:1.00},
-      {p:0.300, x:50, y:50, z:1.00},
-      {p:0.392, x:a.x, y:a.y, z:Z},              // lean in as they arrive
-      {p:0.424, x:a.x, y:a.y, z:Z},
-      {p:0.512, x:b.x, y:b.y, z:Z},              // then walk the length of them
-      {p:0.546, x:b.x, y:b.y, z:Z},
-      {p:0.592, x:50, y:50, z:1.00},
+      {p:0.500, x:50, y:50, z:1.00},
+      {p:0.578, x:a.x, y:a.y, z:Z},              // lean in as they arrive
+      {p:0.610, x:a.x, y:a.y, z:Z},
+      {p:0.686, x:b.x, y:b.y, z:Z},              // then walk the length of them
+      {p:0.718, x:b.x, y:b.y, z:Z},
+      {p:0.762, x:50, y:50, z:1.00},
       {p:1.000, x:50, y:50, z:1.00}
     ];
   }
@@ -580,8 +588,8 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     S += clamp(d*(1-Math.exp(-dt/LAG)), -(paced?SLOW:QUICK)*dt, (paced?SLOW:QUICK)*dt);
   }
 
-  var BEATS=[[0.00,'THE GLASS IS EMPTY'],[0.09,'EIN PROSIT'],[0.24,'AND THE MUSIC STARTS'],
-             [0.31,'EVERYONE WHO CAME'],[0.58,'TWENTY YEARS'],[0.80,'DANKE — ありがとう'],[0.92,'']];
+  var BEATS=[[0.00,'THE GLASS IS EMPTY'],[0.06,'TWENTY YEARS, ONE GLASS'],[0.41,'EIN PROSIT'],
+             [0.47,'EVERYONE WHO CAME'],[0.77,'DANKE — ありがとう'],[0.92,'']];
   var lastBeat='', lastN=0;
 
   function frame(now){
@@ -592,25 +600,22 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var W=innerWidth, H=innerHeight;
 
     /* --- L1 the room warms through --- */
-    warm.style.opacity = span(S,0.56,0.84)*0.78;
+    warm.style.opacity = span(S,0.62,0.84)*0.78;
 
     /* --- L2 the bloom of gratitude --- */
-    var bl = span(S,0.74,0.86) * (1-span(S,0.94,1.00)*0.35);
+    var bl = span(S,0.72,0.84) * (1-span(S,0.94,1.00)*0.35);
     bloom.style.opacity = bl*0.9;
     bloom.style.transform = 'scale('+(0.45+bl*0.62)+')';
 
     /* --- L4 the poster --- */
-    // the poster draws back so the twenty years have the frame to themselves
-    var rec = span(S,ACT.recede[0],ACT.recede[1]) * (1-span(S,ACT.clear[0],ACT.clear[1]));
     var cam = reduce ? null : camAt(S);
-    var z = (cam?cam.z:1) * (1-rec*0.15);
+    var z = cam?cam.z:1;
     if(cam && (z<0.999 || z>1.001)){
       stage.style.transform='scale('+z+') translate('+((50-cam.x)+Math.sin(t*0.21)*0.4)+'%,'+((50-cam.y)+Math.cos(t*0.16)*0.3)+'%)';
     } else if(stage.style.transform){ stage.style.transform=''; }
-    var so = 1-rec*0.80;
-    if(stage._op!==so){ stage.style.opacity=so; stage._op=so; }
 
-    var lvl = reduce ? 1 : level(S);
+    var yrs = reduce ? 20 : poured(S);
+    var lvl = yrs/20;
     var surface = BEER.bottom - (BEER.bottom-BEER.top)*lvl;     // fraction down the stage
     pour.style.clipPath = 'inset('+(surface*100).toFixed(2)+'% 0 0 0)';
 
@@ -666,19 +671,20 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     }
 
     /* --- twenty marks and the count --- */
-    var lit = 0, R = Math.min(W,H)*0.30, ringOut = span(S,ACT.clear[0],ACT.clear[1]);
+    // one mark per year, on a ring that hugs the glass whatever the screen shape
+    var ringOut = span(S,ACT.clear[0],ACT.clear[1]);
+    var RX = Math.min(W*0.46, stage.offsetWidth*0.82),
+        RY = Math.min(H*0.42, stage.offsetHeight*0.62);
     for(var m=0;m<MARK.length;m++){
-      var k=MARK[m], up=span(S, ACT.twenty[0]+m*0.0060, ACT.twenty[0]+m*0.0060+0.020);
-      if(up>0.5) lit=m+1;
+      var k=MARK[m], up=clamp(yrs-m,0,1);       // lights as the level passes it
       var e=back(up);
-      var rad=R*(0.70+0.30*e) + ringOut*R*0.45;
-      var mo=up*(1-ringOut);
-      var mtr='translate('+(Math.cos(k.a)*rad)+'px,'+(Math.sin(k.a)*rad)+'px) translate(-50%,-50%) rotate('+(k.i*18+(1-e)*140+Math.sin(t*0.5+m)*6)+'deg) scale('+(0.2+e*0.8)+')';
+      var gx=(0.70+0.30*e)+ringOut*0.45, mo=up*(1-ringOut);
+      var mtr='translate('+(Math.cos(k.a)*RX*gx)+'px,'+(Math.sin(k.a)*RY*gx)+'px) translate(-50%,-50%) rotate('+(k.i*18+(1-e)*140+Math.sin(t*0.5+m)*6)+'deg) scale('+(0.2+e*0.8)+')';
       if(k._o!==mo){ k.el.style.opacity=mo; k._o=mo; }
       if(mo && k._t!==mtr){ k.el.style.transform=mtr; k._t=mtr; }
     }
-    var cOn = span(S,ACT.twenty[0],ACT.twenty[0]+0.028)*(1-span(S,0.686,0.710));
-    var shown = Math.min(lit||1, 19);          // twenty is never written — the seal says it
+    var cOn = span(S,ACT.pourB[0],ACT.pourB[0]+0.022)*(1-span(S,0.375,0.398));
+    var shown = clamp(Math.ceil(yrs),1,19);    // twenty is never written — the seal says it
     if(lastN!==shown){ count.firstChild.nodeValue = shown; count.setAttribute('data-n', shown); lastN=shown; }
     if(count._o!==cOn){ count.style.opacity=cOn; count._o=cOn; }
     count.style.transform = 'scale('+(0.86+cOn*0.14)+')';
@@ -687,10 +693,16 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var up2 = span(S,ACT.seal[0],ACT.seal[1]), sOut = span(S,ACT.clear[0],ACT.clear[1]);
     var sO = up2*(1-sOut);
     if(seal._o!==sO){ seal.style.opacity=sO; seal._o=sO; }
-    if(sO) seal.style.transform='translate(-50%,-50%) rotate('+((1-back(up2))*-110)+'deg) scale('+(0.3+back(up2)*0.7)*(1+sOut*0.25)+')';
+    if(halo._o!==sO){ halo.style.opacity=sO*0.96; halo._o=sO; }
+    if(sO){
+      var str='translate(-50%,-50%) rotate('+((1-back(up2))*-110)+'deg) scale('+(0.3+back(up2)*0.7)*(1+sOut*0.25)+')';
+      if(seal._t!==str){ seal.style.transform=str; seal._t=str; }
+      var hs='scale('+(0.6+back(up2)*0.4)*(1+sOut*0.3)+')';
+      if(halo._t!==hs){ halo.style.transform=hs; halo._t=hs; }
+    }
 
     /* --- confetti, both depths --- */
-    var back2 = reduce ? 0 : span(S,0.820,0.900);
+    var back2 = reduce ? 0 : span(S,0.790,0.875);
     drift(FAR,  t, W, H, back2, -1);
     drift(NEAR, t, W, H, back2,  1);
 
