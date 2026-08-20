@@ -56,6 +56,13 @@ img{display:block;max-width:100%}
   background:rgba(255,255,255,.9);box-shadow:0 0 0 2px rgba(232,196,20,.55),0 0 0 1px rgba(255,255,255,.9) inset;will-change:transform,opacity}
 .foam{position:absolute;inset:0;pointer-events:none}
 .foam i{position:absolute;left:0;top:0;display:block;border-radius:50%;opacity:0;background:#fff;will-change:transform,opacity}
+/* everything the glass throws out when the twentieth year lands */
+.burst{position:absolute;inset:0;pointer-events:none}
+.burst b{position:absolute;left:0;top:0;opacity:0;font-family:var(--display);line-height:1;will-change:transform,opacity}
+.burst b img{width:100%;height:auto;display:block}
+/* notes that keep playing over the foam */
+.tune{position:absolute;inset:0;pointer-events:none}
+.tune b{position:absolute;left:0;top:0;opacity:0;font-family:var(--display);line-height:1;color:var(--green);will-change:transform,opacity}
 
 /* L5 — twenty marks, and the count they add up to */
 .years{position:absolute;inset:0;z-index:5;pointer-events:none;display:grid;place-items:center}
@@ -224,6 +231,8 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       <img class="piece" data-role="rim"   style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
       <img class="piece" data-role="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
       <div class="foam" id="foam" aria-hidden="true"></div>
+      <div class="burst" id="burst" aria-hidden="true"></div>
+      <div class="tune" id="tune" aria-hidden="true"></div>
       <img class="piece" data-role="notes" style="left:3.172%;top:2.165%;width:65.167%" src="assets/deco.webp" alt="">
       <img class="piece" data-role="title" style="left:17.128%;top:60.784%;width:70.588%" src="assets/title.webp" alt="SENDAI OKTOBERFEST 20TH">
       <img class="piece" data-role="motif" style="left:39.100%;top:10.458%;width:5.017%" src="assets/motif_0.webp" alt="">
@@ -417,18 +426,20 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     else if(role==='notes')  s={from:0.450,to:0.545,sc:0.96,dy:5};
     else if(role==='people') s={from:0.468,to:0.585,sc:0.95,dy:11};
     else if(role==='motif'){
+      // they start small at the middle of the glass and travel outward to their
+      // printed places, so the burst carries them
       var k=motifs.indexOf(p), dir=cx<50?-1:1;
-      s={from:0.490+k*0.010,to:0.600+k*0.010,sc:0.5,dx:dir*40,dy:(k%2?22:-26),rot:dir*160};
+      s={from:0.470+k*0.013,to:0.610+k*0.013,sc:0.22,center:true,rot:dir*210,life:1};
     }
-    else if(role==='copy')   s={from:0.775,to:0.850,sc:1,dx:7};
-    else if(role==='title')  s={from:0.842,to:0.905,sc:0.94,dy:7};
-    else if(role==='emblem') s={from:0.858,to:0.925,sc:0.25,rot:-200};
+    else if(role==='copy')   s={from:0.845,to:0.918,sc:1,dx:7};
+    else if(role==='title')  s={from:0.855,to:0.918,sc:0.94,dy:7};
+    else if(role==='emblem') s={from:0.868,to:0.932,sc:0.25,rot:-200};
     else if(role==='dia'){
       var j=dias.indexOf(p);
-      s={from:0.862+j*0.005,to:0.925+j*0.005,sc:0.7,dx:(j%3-1)*9,dy:-44-(j%4)*10,rot:(j%2?1:-1)*180};
+      s={from:0.872+j*0.005,to:0.932+j*0.005,sc:0.7,dx:(j%3-1)*9,dy:-44-(j%4)*10,rot:(j%2?1:-1)*180};
     }
-    else if(role==='final')  s={from:0.872,to:0.938,sc:1,dy:5};
-    else if(role==='info')   s={from:0.905,to:0.965,sc:1,dy:5};
+    else if(role==='final')  s={from:0.882,to:0.944,sc:1,dy:5};
+    else if(role==='info')   s={from:0.914,to:0.968,sc:1,dy:5};
     else if(role==='sponsor')s={from:0.930,to:1.000,sc:1,dy:4};
     s.dx=s.dx||0; s.dy=s.dy||0; s.rot=s.rot||0;
     p._s=s;
@@ -479,6 +490,44 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       FOAM.push({el:el, x:16+rnd()*62, rise:6+rnd()*16, dx:(rnd()*2-1)*10, st:rnd()*0.45, ph:rnd()*TAU});
     }
     document.getElementById('foam').appendChild(f);
+  })();
+
+  /* ---------- the burst ----------
+     When the twentieth year lands, the glass throws everything it has been
+     holding outward — notes, shapes and sparks, straight out of the beer.    */
+  var BURST=[];
+  (function(){
+    var seed=112, f=document.createDocumentFragment();
+    function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+    var art=['assets/dia0.webp?v=2','assets/dia1.webp?v=2','assets/dia2.webp?v=2','assets/motif_6.webp'];
+    var glyphs=['♪','♫','♬','♩','✦'];
+    for(var i=0;i<52;i++){
+      var el=document.createElement('b');
+      if(i%3===2){ el.textContent=glyphs[i%5]; el.style.color = i%2?'var(--green)':'var(--lime)'; el.style.fontSize=(2.2+rnd()*3.4)+'vmin'; }
+      else { var im=document.createElement('img'); im.src=art[i%4]; im.alt=''; el.style.width=(2.4+rnd()*3.6)+'vmin'; el.appendChild(im); }
+      f.appendChild(el);
+      BURST.push({ el:el, a:rnd()*TAU, d:24+rnd()*62, st:Math.pow(rnd(),1.5)*0.30,
+                   r0:rnd()*360, spin:(rnd()*2-1)*520, sc:0.5+rnd()*0.9, wob:rnd()*TAU });
+    }
+    document.getElementById('burst').appendChild(f);
+  })();
+
+  /* ---------- the tune ----------
+     A handful of notes that keep drifting out of the foam for the rest of it. */
+  var TUNE=[];
+  (function(){
+    var seed=7788, f=document.createDocumentFragment();
+    function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+    var glyphs=['♪','♫','♬','♩'];
+    for(var i=0;i<14;i++){
+      var el=document.createElement('b');
+      el.textContent=glyphs[i%4];
+      el.style.fontSize=(1.7+rnd()*2.4)+'vmin';
+      el.style.color = i%3===0 ? 'var(--lime)' : 'var(--green)';
+      f.appendChild(el);
+      TUNE.push({ el:el, x:14+rnd()*66, dur:5+rnd()*7, off:rnd(), sway:2+rnd()*6, ph:rnd()*TAU, sc:0.7+rnd()*0.6 });
+    }
+    document.getElementById('tune').appendChild(f);
   })();
 
   /* ---------- twenty marks ----------
@@ -550,12 +599,12 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     trackW=innerWidth;
     return [
       {p:0.000, x:50, y:50, z:1.00},
-      {p:0.500, x:50, y:50, z:1.00},
-      {p:0.578, x:a.x, y:a.y, z:Z},              // lean in as they arrive
-      {p:0.610, x:a.x, y:a.y, z:Z},
-      {p:0.686, x:b.x, y:b.y, z:Z},              // then walk the length of them
-      {p:0.718, x:b.x, y:b.y, z:Z},
-      {p:0.762, x:50, y:50, z:1.00},
+      {p:0.496, x:50, y:50, z:1.00},
+      {p:0.606, x:a.x, y:a.y, z:Z},              // lean in as they arrive
+      {p:0.634, x:a.x, y:a.y, z:Z},
+      {p:0.736, x:b.x, y:b.y, z:Z},              // then walk the length of them
+      {p:0.762, x:b.x, y:b.y, z:Z},
+      {p:0.836, x:50, y:50, z:1.00},
       {p:1.000, x:50, y:50, z:1.00}
     ];
   }
@@ -578,7 +627,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
      The poster follows the scroll but keeps its own pace: a hard flick moves
      you down the page, it does not fast-forward the film.                    */
   var P=0, S=0, started=false, lastNow=0;
-  var LAG=0.42, SLOW=0.20, QUICK=0.85;
+  var LAG=0.52, SLOW=0.155, QUICK=0.85;
   function settle(dt){
     if(reduce){ S=1; return; }
     if(!started){ S=P; started=true; return; }
@@ -589,7 +638,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   }
 
   var BEATS=[[0.00,'THE GLASS IS EMPTY'],[0.06,'TWENTY YEARS, ONE GLASS'],[0.41,'EIN PROSIT'],
-             [0.47,'EVERYONE WHO CAME'],[0.77,'DANKE — ありがとう'],[0.92,'']];
+             [0.47,'EVERYONE WHO CAME'],[0.84,'DANKE — ありがとう'],[0.93,'']];
   var lastBeat='', lastN=0;
 
   function frame(now){
@@ -600,18 +649,20 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     var W=innerWidth, H=innerHeight;
 
     /* --- L1 the room warms through --- */
-    warm.style.opacity = span(S,0.62,0.84)*0.78;
+    warm.style.opacity = span(S,0.66,0.88)*0.78;
 
     /* --- L2 the bloom of gratitude --- */
-    var bl = span(S,0.72,0.84) * (1-span(S,0.94,1.00)*0.35);
+    var flare = span(S,0.450,0.492)*(1-span(S,0.505,0.585));
+    var bl = span(S,0.78,0.88) * (1-span(S,0.94,1.00)*0.35);
+    bl = Math.max(bl, flare*0.85);
     bloom.style.opacity = bl*0.9;
-    bloom.style.transform = 'scale('+(0.45+bl*0.62)+')';
+    bloom.style.transform = 'scale('+(0.45+bl*0.62+flare*0.32)+')';
 
     /* --- L4 the poster --- */
     var cam = reduce ? null : camAt(S);
     var z = cam?cam.z:1;
     if(cam && (z<0.999 || z>1.001)){
-      stage.style.transform='scale('+z+') translate('+((50-cam.x)+Math.sin(t*0.21)*0.4)+'%,'+((50-cam.y)+Math.cos(t*0.16)*0.3)+'%)';
+      stage.style.transform='scale('+z+') translate('+((50-cam.x)+Math.sin(t*0.15)*0.34)+'%,'+((50-cam.y)+Math.cos(t*0.11)*0.26)+'%)';
     } else if(stage.style.transform){ stage.style.transform=''; }
 
     var yrs = reduce ? 20 : poured(S);
@@ -625,18 +676,29 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       var lp=s.pop?back(raw):out(raw), inv=1-lp;
       var dx=s.dx, dy=s.dy;
       if(s.center){ var c=centre(p); if(c){ dx=c.tx; dy=c.ty; } }
-      var amb=0, ambR=0;
-      // the idle sway is for the wide view; while the lens is in close it only
-      // costs repaints at high magnification, and the camera drift covers it
-      if(!reduce && raw>0.98 && z<1.15){
+      var amb=0, ambX=0, ambR=0, puff=1;
+      if(!reduce && raw>0.94){
         var role=p.dataset.role;
-        if(role==='motif'){ amb=Math.sin(t*0.75+i)*0.9;  ambR=Math.sin(t*0.5+i)*2.4; }
-        if(role==='dia'){   amb=Math.sin(t*0.6+i*1.7)*1.1; ambR=Math.sin(t*0.4+i)*3.6; }
-        // the crowd breathes together once they are all here
-        if(role==='people'){ amb=Math.sin(t*0.55)*0.5*(1-span(S,0.86,0.94)); }
+        // the instruments keep playing: each on its own slow figure, so they
+        // read as floating rather than as a layer being nudged
+        if(role==='motif'){
+          amb  = Math.sin(t*0.62+i*1.3)*2.6;
+          ambX = Math.cos(t*0.47+i*0.9)*1.9;
+          ambR = Math.sin(t*0.38+i)*7.5;
+        }
+        if(role==='dia'){ amb=Math.sin(t*0.6+i*1.7)*1.2; ambX=Math.cos(t*0.45+i)*0.8; ambR=Math.sin(t*0.4+i)*4.2; }
+        // the notes printed in the foam lift and settle with the music
+        if(role==='notes'){ amb=Math.sin(t*0.5)*0.9; ambX=Math.cos(t*0.33)*0.5; ambR=Math.sin(t*0.29)*0.8; }
+        // and the crowd breathes together
+        if(role==='people'){
+          var breath=1-span(S,0.90,0.96);
+          amb  = Math.sin(t*0.9)*0.62*breath;
+          ambX = Math.cos(t*0.41)*0.24*breath;
+          puff = 1 + Math.sin(t*0.9+1.1)*0.0055*breath;
+        }
       }
-      var op = (s.fade===false)?1:clamp(raw*1.35,0,1);
-      var tr = 'translate('+(dx*(1-lp))+'%,'+(dy*(1-lp)+amb)+'%) rotate('+(s.rot*(1-lp)+ambR)+'deg) scale('+(s.sc+(1-s.sc)*lp)+')';
+      var op = (s.fade===false)?1:clamp(raw*(s.life?2.4:1.35),0,1);
+      var tr = 'translate('+(dx*(1-lp)+ambX)+'%,'+(dy*(1-lp)+amb)+'%) rotate('+(s.rot*(1-lp)+ambR)+'deg) scale('+((s.sc+(1-s.sc)*lp)*puff)+')';
       if(p._op!==op){ p.style.opacity=op; p._op=op; }
       if(p._tr!==tr){ p.style.transform=tr; p._tr=tr; }
     }
@@ -668,6 +730,31 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       }
       if(fm._o!==fo){ fm.el.style.opacity=fo; fm._o=fo; }
       if(fo && fm._t!==ftr){ fm.el.style.transform=ftr; fm._t=ftr; }
+    }
+
+    /* --- what the glass throws out at twenty --- */
+    var SW=stage.offsetWidth, SH=stage.offsetHeight;
+    for(var v=0;v<BURST.length;v++){
+      var u=BURST[v], lv=span(S, 0.452+u.st*0.14, 0.452+u.st*0.14+0.135), bo=0, btr='';
+      if(!reduce && lv>0 && lv<1){
+        var ev=out(lv);
+        bo=Math.pow(Math.sin(Math.PI*Math.pow(lv,0.75)),0.75);
+        var dd=u.d*ev/100;
+        btr='translate('+(50+Math.cos(u.a)*dd*100+Math.sin(t*1.1+u.wob)*0.6)/100*SW+'px,'+(49+Math.sin(u.a)*dd*88)/100*SH+'px) translate(-50%,-50%) rotate('+(u.r0+u.spin*ev)+'deg) scale('+(u.sc*(0.25+ev*0.9))+')';
+      }
+      if(u._o!==bo){ u.el.style.opacity=bo; u._o=bo; }
+      if(bo && u._t!==btr){ u.el.style.transform=btr; u._t=btr; }
+    }
+    var tuneOn = reduce ? 0 : span(S,0.470,0.540)*(1-span(S,0.900,0.960));
+    for(var n2=0;n2<TUNE.length;n2++){
+      var tn=TUNE[n2], to=0, ttr='';
+      if(tuneOn>0.01){
+        var ln=(t/tn.dur + tn.off)%1;
+        to=Math.pow(Math.sin(Math.PI*ln),0.7)*tuneOn*0.85;
+        ttr='translate('+((tn.x+Math.sin(ln*TAU+tn.ph)*tn.sway)/100*SW)+'px,'+((0.30-0.26*ln)*SH)+'px) rotate('+(Math.sin(t*0.8+n2)*16)+'deg) scale('+(tn.sc*(0.6+ln*0.5))+')';
+      }
+      if(tn._o!==to){ tn.el.style.opacity=to; tn._o=to; }
+      if(to && tn._t!==ttr){ tn.el.style.transform=ttr; tn._t=ttr; }
     }
 
     /* --- twenty marks and the count --- */
@@ -702,7 +789,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     }
 
     /* --- confetti, both depths --- */
-    var back2 = reduce ? 0 : span(S,0.790,0.875);
+    var back2 = reduce ? 0 : span(S,0.828,0.902);
     drift(FAR,  t, W, H, back2, -1);
     drift(NEAR, t, W, H, back2,  1);
 
