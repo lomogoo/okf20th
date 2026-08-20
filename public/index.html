@@ -48,7 +48,11 @@ img{display:block;max-width:100%}
 
 /* L4 — the poster itself */
 .stage{position:relative;z-index:2;height:min(92svh,132vw);aspect-ratio:1734/2448;transform-origin:50% 50%;will-change:transform}
-.piece{position:absolute;will-change:transform,opacity;transform-origin:50% 50%}
+.piece{position:absolute;transform-origin:50% 50%}
+/* No will-change here on purpose: promoting all 31 poster images gives each one
+   its own texture, and re-rasterising those while the stage is scaled costs far
+   more than it saves — measured 50fps with it, 61fps without. The stage itself
+   is promoted, and so are the small particles, where it does help. */
 .piece.full{left:0;top:0;width:100%}
 .pour{overflow:hidden}
 .bubbles{position:absolute;inset:0;pointer-events:none}
@@ -424,7 +428,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     else if(role==='beer')   s={from:0.000,to:0.055,sc:1.09,dy:3,fade:false};
     else if(role==='rim')    s={from:0.000,to:0.060,sc:1.09,dy:3};
     else if(role==='notes')  s={from:0.405,to:0.492,sc:0.96,dy:5};
-    else if(role==='people') s={from:0.512,to:0.632,sc:0.95,dy:11};
+    else if(role==='people') s={from:0.443,to:0.563,sc:0.95,dy:11};
     else if(role==='motif'){
       // they start small at the middle of the glass and travel outward to their
       // printed places, so the burst carries them
@@ -599,12 +603,12 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
     trackW=innerWidth;
     return [
       {p:0.000, x:50, y:50, z:1.00},
-      {p:0.600, x:50, y:50, z:1.00},
-      {p:0.694, x:a.x, y:a.y, z:Z},              // lean in as they arrive
-      {p:0.716, x:a.x, y:a.y, z:Z},
-      {p:0.800, x:b.x, y:b.y, z:Z},              // then walk the length of them
-      {p:0.820, x:b.x, y:b.y, z:Z},
-      {p:0.882, x:50, y:50, z:1.00},
+      {p:0.570, x:50, y:50, z:1.00},
+      {p:0.668, x:a.x, y:a.y, z:Z},              // lean in as they arrive
+      {p:0.692, x:a.x, y:a.y, z:Z},
+      {p:0.784, x:b.x, y:b.y, z:Z},              // then walk the length of them
+      {p:0.806, x:b.x, y:b.y, z:Z},
+      {p:0.872, x:50, y:50, z:1.00},
       {p:1.000, x:50, y:50, z:1.00}
     ];
   }
@@ -638,7 +642,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   }
 
   var BEATS=[[0.00,'THE GLASS IS EMPTY'],[0.05,'TWENTY YEARS, ONE GLASS'],[0.35,'EIN PROSIT'],
-             [0.51,'EVERYONE WHO CAME'],[0.88,'DANKE — ありがとう'],[0.955,'']];
+             [0.45,'EVERYONE WHO CAME'],[0.88,'DANKE — ありがとう'],[0.955,'']];
   var lastBeat='', lastN=0;
 
   function frame(now){
@@ -688,11 +692,11 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
         }
         if(role==='dia'){ amb=Math.sin(t*0.6+i*1.7)*1.2; ambX=Math.cos(t*0.45+i)*0.8; ambR=Math.sin(t*0.4+i)*4.2; }
         // the notes printed in the foam lift and settle with the music
-        if(role==='notes'){ amb=Math.sin(t*0.5)*1.5; ambX=Math.cos(t*0.33)*0.85; ambR=Math.sin(t*0.29)*1.4; }
+        if(role==='notes'){ amb=Math.sin(t*0.5)*3.0; ambX=Math.cos(t*0.33)*0.85; ambR=Math.sin(t*0.29)*1.4; }
         // and the crowd breathes together
         if(role==='people'){
           var breath=1-span(S,0.925,0.975);
-          amb  = Math.sin(t*0.9)*1.00*breath;
+          amb  = Math.sin(t*0.9)*2.00*breath;
           ambX = Math.cos(t*0.41)*0.42*breath;
           puff = 1 + Math.sin(t*0.9+1.1)*0.0090*breath;
         }
