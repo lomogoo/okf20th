@@ -1,5 +1,8 @@
+# Asset filenames are stable, so keep the browser copy short-lived and let the
+# CDN serve it while it revalidates — a corrected image then reaches people in
+# minutes instead of being masked by a day-long cache.
 /assets/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=600, stale-while-revalidate=604800
 
 /*
   X-Content-Type-Options: nosniff

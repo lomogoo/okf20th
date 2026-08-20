@@ -147,6 +147,28 @@ img{display:block;max-width:100%}
 }
 .danke.in .danke__rule{transform:none}
 
+/* ---------- to everyone ---------- */
+.toall{padding:6svh 0 10svh}
+.toall__lead{font-size:clamp(1.35rem,3.6vw,2.3rem);font-weight:900;line-height:1.75;letter-spacing:.01em;margin-bottom:5rem}
+.toall__lead em{font-style:normal;color:var(--green)}
+.toall__list{list-style:none;display:grid;gap:1px;background:rgba(23,81,60,.14);
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));border:1px solid rgba(23,81,60,.14)}
+.toall__list li{background:var(--paper);padding:2.6rem 2rem 2.9rem;position:relative}
+.toall__list b{display:block;font-family:var(--display);font-weight:700;font-size:2.6rem;line-height:1;
+  color:transparent;-webkit-text-stroke:1.4px var(--lime);margin-bottom:1.3rem}
+.toall__list h3{font-size:.98rem;font-weight:700;line-height:1.7;margin-bottom:.9rem}
+.toall__list p{font-size:.86rem;line-height:2.05;opacity:.72}
+.toall__list li:hover b{-webkit-text-stroke-color:var(--green)}
+.toall__list b,.toall__list li:hover b{transition:-webkit-text-stroke-color .5s ease}
+
+/* ---------- and the next one ---------- */
+.vow{padding:2svh 0 12svh}
+.vow .wrap{text-align:center}
+.vow .eyebrow{justify-content:center}
+.vow .eyebrow::after{display:none}
+.vow__text{font-size:clamp(.98rem,2.1vw,1.16rem);line-height:2.45;margin-top:.6rem}
+.vow__sign{margin-top:3.4rem;font-size:.78rem;letter-spacing:.16em;opacity:.6}
+
 /* ---------- facts ---------- */
 .facts{padding:6svh 0 12svh}
 .dateline{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,8.4vw,6.4rem);line-height:1;letter-spacing:-.02em;color:var(--green);display:flex;align-items:baseline;gap:.1em;flex-wrap:wrap}
@@ -194,9 +216,9 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       <div class="piece full pour" data-role="beer" id="pour"><img src="assets/beer.webp" alt=""></div>
       <div class="bubbles" id="bubbles" aria-hidden="true"></div>
       <!-- everyone who came -->
-      <img class="piece" data-role="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
       <!-- the glass outline sits in front of both -->
       <img class="piece" data-role="rim"   style="left:2.018%;top:2.900%;width:96.367%" src="assets/mugline.webp" alt="">
+      <img class="piece" data-role="people" style="left:6.401%;top:10.294%;width:88.351%" src="assets/people.webp" alt="乾杯する人々のイラスト">
       <div class="foam" id="foam" aria-hidden="true"></div>
       <img class="piece" data-role="notes" style="left:3.172%;top:2.165%;width:65.167%" src="assets/deco.webp" alt="">
       <img class="piece" data-role="title" style="left:17.128%;top:60.784%;width:70.588%" src="assets/title.webp" alt="SENDAI OKTOBERFEST 20TH">
@@ -208,19 +230,19 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       <img class="piece" data-role="motif" style="left:89.043%;top:70.425%;width:3.633%" src="assets/motif_5.webp" alt="">
       <img class="piece" data-role="motif" style="left:89.043%;top:76.593%;width:5.536%" src="assets/motif_6.webp" alt="">
       <img class="piece" data-role="motif" style="left:3.230%;top:84.191%;width:5.363%" src="assets/motif_7.webp" alt="">
-      <img class="piece" data-role="emblem" style="left:5.133%;top:2.328%;width:10.323%" src="assets/emblem.webp" alt="20th Anniversary">
+      <img class="piece" data-role="emblem" style="left:5.133%;top:2.328%;width:10.323%" src="assets/emblem_green.webp" alt="20th Anniversary">
       <img class="piece" data-role="copy"   style="left:59.573%;top:5.310%;width:37.313%" src="assets/catchcopy.webp" alt="20年分の「ありがとう」。乾杯でつながる、笑顔の未来。">
-      <img class="piece" data-role="dia" style="left:63.495%;top:0.245%;width:5.133%" src="assets/dia0.webp" alt="">
-      <img class="piece" data-role="dia" style="left:91.753%;top:1.675%;width:5.536%" src="assets/dia1.webp" alt="">
-      <img class="piece" data-role="dia" style="left:16.667%;top:1.797%;width:5.017%" src="assets/dia2.webp" alt="">
-      <img class="piece" data-role="dia" style="left:1.442%;top:9.355%;width:4.671%" src="assets/dia0.webp" alt="">
-      <img class="piece" data-role="dia" style="left:81.603%;top:10.131%;width:6.228%" src="assets/dia1.webp" alt="">
-      <img class="piece" data-role="dia" style="left:91.061%;top:18.505%;width:4.671%" src="assets/dia2.webp" alt="">
-      <img class="piece" data-role="dia" style="left:5.363%;top:56.087%;width:4.902%" src="assets/dia0.webp" alt="">
-      <img class="piece" data-role="dia" style="left:91.407%;top:61.724%;width:6.344%" src="assets/dia1.webp" alt="">
-      <img class="piece" data-role="dia" style="left:6.805%;top:64.992%;width:4.614%" src="assets/dia2.webp" alt="">
-      <img class="piece" data-role="dia" style="left:2.595%;top:75.776%;width:5.248%" src="assets/dia0.webp" alt="">
-      <img class="piece" data-role="dia" style="left:82.641%;top:78.064%;width:3.633%" src="assets/dia1.webp" alt="">
+      <img class="piece" data-role="dia" style="left:63.495%;top:0.245%;width:5.133%" src="assets/dia0.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:91.753%;top:1.675%;width:5.536%" src="assets/dia1.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:16.667%;top:1.797%;width:5.017%" src="assets/dia2.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:1.442%;top:9.355%;width:4.671%" src="assets/dia0.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:81.603%;top:10.131%;width:6.228%" src="assets/dia1.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:91.061%;top:18.505%;width:4.671%" src="assets/dia2.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:5.363%;top:56.087%;width:4.902%" src="assets/dia0.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:91.407%;top:61.724%;width:6.344%" src="assets/dia1.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:6.805%;top:64.992%;width:4.614%" src="assets/dia2.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:2.595%;top:75.776%;width:5.248%" src="assets/dia0.webp?v=2" alt="">
+      <img class="piece" data-role="dia" style="left:82.641%;top:78.064%;width:3.633%" src="assets/dia1.webp?v=2" alt="">
       <img class="piece" data-role="final"  style="left:19.550%;top:21.732%;width:67.243%" src="assets/date.webp" alt="2026年9月11日金曜から9月27日日曜">
       <img class="piece" data-role="final"  style="left:3.518%;top:34.518%;width:65.110%" src="assets/extras.webp" alt="">
       <img class="piece" data-role="info"   style="left:3.287%;top:84.150%;width:94.752%" src="assets/infotext.webp" alt="">
@@ -229,7 +251,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
     <div class="years" id="years" aria-hidden="true">
       <p class="years__count" id="count" data-n="1">1<span class="years__label">YEARS</span></p>
-      <img class="years__seal" id="seal" src="assets/emblem.webp" alt="">
+      <img class="years__seal" id="seal" src="assets/emblem_green.webp" alt="">
     </div>
     <div class="drift drift--near" id="driftNear" aria-hidden="true"></div>
 
@@ -250,19 +272,53 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
 <section class="danke" id="danke" aria-label="DANKE">
   <div class="danke__deco" aria-hidden="true">
-    <img src="assets/dia1.webp" alt="" style="left:7%;top:14%;max-width:52px;animation-duration:11s">
-    <img src="assets/dia0.webp" alt="" style="left:17%;top:64%;max-width:38px;animation-duration:15s;animation-delay:-4s">
+    <img src="assets/dia1.webp?v=2" alt="" style="left:7%;top:14%;max-width:52px;animation-duration:11s">
+    <img src="assets/dia0.webp?v=2" alt="" style="left:17%;top:64%;max-width:38px;animation-duration:15s;animation-delay:-4s">
     <img src="assets/motif_6.webp" alt="" style="left:29%;top:8%;max-width:44px;animation-duration:17s;animation-delay:-9s">
-    <img src="assets/dia2.webp" alt="" style="right:9%;top:20%;max-width:56px;animation-duration:12s;animation-delay:-2s">
-    <img src="assets/dia1.webp" alt="" style="right:21%;top:70%;max-width:40px;animation-duration:16s;animation-delay:-7s">
+    <img src="assets/dia2.webp?v=2" alt="" style="right:9%;top:20%;max-width:56px;animation-duration:12s;animation-delay:-2s">
+    <img src="assets/dia1.webp?v=2" alt="" style="right:21%;top:70%;max-width:40px;animation-duration:16s;animation-delay:-7s">
     <img src="assets/motif_6.webp" alt="" style="right:33%;top:6%;max-width:34px;animation-duration:14s;animation-delay:-5s">
-    <img src="assets/dia0.webp" alt="" style="left:45%;top:80%;max-width:32px;animation-duration:18s;animation-delay:-11s">
+    <img src="assets/dia0.webp?v=2" alt="" style="left:45%;top:80%;max-width:32px;animation-duration:18s;animation-delay:-11s">
   </div>
   <div class="danke__rule"></div>
   <p class="danke__word" aria-label="DANKE!">
     <span data-c="D" aria-hidden="true">D</span><span data-c="A" aria-hidden="true">A</span><span data-c="N" aria-hidden="true">N</span><span data-c="K" aria-hidden="true">K</span><span data-c="E" aria-hidden="true">E</span><span data-c="!" aria-hidden="true">!</span>
   </p>
   <p class="danke__sub">20年、ありがとうございました。<br>ドイツの言葉で、いちばん伝えたいこと。</p>
+</section>
+
+<section class="toall">
+  <div class="wrap">
+    <p class="eyebrow reveal">TO EVERYONE WHO MADE IT POSSIBLE</p>
+    <h2 class="toall__lead reveal">この20回は、<em>たくさんの人の手</em>でできています。</h2>
+    <ol class="toall__list">
+      <li class="reveal"><b>01</b><h3>会場に来てくださったみなさまへ</h3>
+        <p>ジョッキを掲げ、音楽に手をたたき、隣の人と笑い合ってくださった。その一杯ずつが、この祭りの20年です。</p></li>
+      <li class="reveal"><b>02</b><h3>出店者のみなさまへ</h3>
+        <p>ドイツの味も、東北の味も。仕込みから片付けまで、いちばん長く会場にいてくださるのはいつもみなさんでした。</p></li>
+      <li class="reveal"><b>03</b><h3>演奏者・出演者のみなさまへ</h3>
+        <p>ステージから広がる音が、はじめて来た人と常連を、いつも一瞬でひとつにしてくれました。</p></li>
+      <li class="reveal"><b>04</b><h3>運営スタッフ・ボランティアのみなさまへ</h3>
+        <p>雨の日も、風の日も。誰にも見えないところで積み上げてくださった段取りの上に、この会場は立っています。</p></li>
+      <li class="reveal"><b>05</b><h3>協賛・後援・関係機関のみなさまへ</h3>
+        <p>続けることをいちばん難しくさせない。その支えがあったから、20回目までたどり着くことができました。</p></li>
+      <li class="reveal"><b>06</b><h3>錦町公園と、この街のみなさまへ</h3>
+        <p>まちなかの公園を、秋のあいだお借りしています。近隣のみなさまのご理解に、心より感謝申し上げます。</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="vow">
+  <div class="wrap reveal">
+    <p class="eyebrow">AND THE NEXT ONE</p>
+    <p class="vow__text">
+      20年でいちばん変わらなかったのは、<br>
+      「乾杯」のあとに生まれる、あの空気でした。<br><br>
+      21年目からも、その空気をつくり続けます。<br>
+      今年の秋も、錦町公園でお待ちしています。
+    </p>
+    <p class="vow__sign">SENDAI OKTOBERFEST 2026 — 20TH ANNIVERSARY</p>
+  </div>
 </section>
 
 <section class="facts">
@@ -339,7 +395,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
 
   var ACT = {
     pourB:[0.075,0.235], foam:[0.225,0.300],
-    twenty:[0.575,0.735], recede:[0.555,0.615], seal:[0.715,0.795],
+    twenty:[0.575,0.735], recede:[0.555,0.615], seal:[0.696,0.788],
     clear:[0.800,0.865]
   };
 
@@ -421,7 +477,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
      One for each year, lit in turn around the count they add up to.          */
   var MARK=[];
   (function(){
-    var art=['assets/dia0.webp','assets/dia1.webp','assets/dia2.webp'], f=document.createDocumentFragment();
+    var art=['assets/dia0.webp?v=2','assets/dia1.webp?v=2','assets/dia2.webp?v=2'], f=document.createDocumentFragment();
     for(var i=0;i<20;i++){
       var el=document.createElement('b'), im=document.createElement('img');
       im.src=art[i%3]; im.alt=''; el.appendChild(im);
@@ -438,7 +494,7 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
   (function(){
     var seed=20260911;
     function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
-    var art=['assets/dia0.webp','assets/dia1.webp','assets/dia2.webp','assets/motif_6.webp'];
+    var art=['assets/dia0.webp?v=2','assets/dia1.webp?v=2','assets/dia2.webp?v=2','assets/motif_6.webp'];
     var glyphs=['♪','♫','♬','♩'];
     function build(host, n, near, list){
       var f=document.createDocumentFragment();
@@ -471,22 +527,27 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
      their faces, then back out so the poster can be seen whole.              */
   var subject = pieces.filter(function(p){return p.dataset.role==='people';})[0];
   var track=null, trackW=0;
-  function crowd(){
+  // two points in people.webp's own pixel grid (1060 x 1269): the players on
+  // the left, and the toast on the right
+  var LOOK = [[330,360],[830,330]];
+  function at(cut){
     var L=parseFloat(subject.style.left)||0, T=parseFloat(subject.style.top)||0, W=parseFloat(subject.style.width)||100;
     var H=W*(subject.naturalHeight/subject.naturalWidth)*AR;
-    return { x:L+W*0.52, y:T+H*0.30 };            // the raised glasses, not the feet
+    return { x:L+cut[0]/subject.naturalWidth*W, y:T+cut[1]/subject.naturalHeight*H };
   }
   function build(){
     if(!subject || !subject.naturalWidth) return null;
-    var c=crowd();
-    var Z = innerWidth < 720 ? 1.62 : 1.95;
+    var a=at(LOOK[0]), b=at(LOOK[1]);
+    var Z = innerWidth < 720 ? 1.58 : 1.88;
     trackW=innerWidth;
     return [
       {p:0.000, x:50, y:50, z:1.00},
       {p:0.300, x:50, y:50, z:1.00},
-      {p:0.430, x:c.x, y:c.y, z:Z},              // lean in as they arrive
-      {p:0.540, x:c.x, y:c.y, z:Z},              // and stay a while
-      {p:0.578, x:50, y:50, z:1.00},
+      {p:0.392, x:a.x, y:a.y, z:Z},              // lean in as they arrive
+      {p:0.424, x:a.x, y:a.y, z:Z},
+      {p:0.512, x:b.x, y:b.y, z:Z},              // then walk the length of them
+      {p:0.546, x:b.x, y:b.y, z:Z},
+      {p:0.592, x:50, y:50, z:1.00},
       {p:1.000, x:50, y:50, z:1.00}
     ];
   }
@@ -616,8 +677,9 @@ footer strong{display:block;font-family:var(--display);font-size:1rem;letter-spa
       if(k._o!==mo){ k.el.style.opacity=mo; k._o=mo; }
       if(mo && k._t!==mtr){ k.el.style.transform=mtr; k._t=mtr; }
     }
-    var cOn = span(S,ACT.twenty[0],ACT.twenty[0]+0.028)*(1-span(S,0.700,0.735));
-    if(lastN!==lit){ count.firstChild.nodeValue = lit||1; count.setAttribute('data-n', lit||1); lastN=lit; }
+    var cOn = span(S,ACT.twenty[0],ACT.twenty[0]+0.028)*(1-span(S,0.686,0.710));
+    var shown = Math.min(lit||1, 19);          // twenty is never written — the seal says it
+    if(lastN!==shown){ count.firstChild.nodeValue = shown; count.setAttribute('data-n', shown); lastN=shown; }
     if(count._o!==cOn){ count.style.opacity=cOn; count._o=cOn; }
     count.style.transform = 'scale('+(0.86+cOn*0.14)+')';
 
